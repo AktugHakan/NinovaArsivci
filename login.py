@@ -1,11 +1,22 @@
-import requests
+from cmath import log
+import requests, logging
 from bs4 import BeautifulSoup
 
-def login():
-    # Text coloring
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
 
+# Text coloring
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+WARNING = '\033[93m'
+
+def check_connection():
+    CHECK_CONNECTIVITY_URL = "http://www.example.com/"
+    try:
+        requests.get(CHECK_CONNECTIVITY_URL)
+        return True
+    except:
+        return False
+
+def login():
     # Meta-data
     URL = "https://ninova.itu.edu.tr/Kampus1"
     HEADERS = {
@@ -26,13 +37,22 @@ def login():
             USER_NAME = f.readline().strip(" \n")
             PASSWORD = f.readline().strip(" \n")
     except FileNotFoundError:
-        print(f"{FAIL}Kullanıcı adı ve şifre bulunamadı{ENDC}\nLütfen aynı klasör içine {SECURE_INFO_FILE} dosyasını oluşturun ve \nilk satıra kullanıcı adı ikinci satıra şifrenizi yazın.")
+        raise FileNotFoundError(f"{FAIL}Kullanıcı adı ve şifre bulunamadı{ENDC}\nLütfen aynı klasör içine {SECURE_INFO_FILE} dosyasını oluşturun ve \nilk satıra kullanıcı adı ikinci satıra şifrenizi yazın.")
     except PermissionError:
-        print(f"{FAIL}Programın dosya sistemine erişimi yok!{ENDC}")
+        raise PermissionError(f"{FAIL}Programın dosya sistemine erişimi yok!{ENDC}")
 
     # Requesting and parsing the page
     session = requests.Session()
-    page = session.get(URL, headers=HEADERS)
+    try:
+        page = session.get(URL, headers=HEADERS)
+    except:
+        logging.warning(f"{WARNING}{URL}'a bağlanılamadı. İnternet bağlantı kontrol ediliyor.{ENDC}")
+        if check_connection():
+            raise ConnectionError(f"{FAIL}İnternet var ancak Ninova'ya bağlanılamıyor.{ENDC}")
+        else:
+            raise ConnectionError(f"{FAIL}Internete erişim yok. Bağlantınızı kontrol edin.{ENDC}")
+
+
     page = BeautifulSoup(page.content, "lxml")
 
     post_data = dict()
