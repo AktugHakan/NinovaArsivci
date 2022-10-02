@@ -9,9 +9,11 @@ except:
 
 from sys import argv
 from src.login import login
+from src.kampus import get_course_list
+
 
 # ---CONSTANTS---
-URL = "https://ninova.itu.edu.tr/Kampus1"
+URL = "https://ninova.itu.edu.tr"
 
 
 # ---MAIN---
@@ -22,10 +24,8 @@ if(len(argv) == 3):
 else:
     username = input("Kullanıcı adı (@itu.edu.tr olmadan): ")
     password = getpass("Şifreniz: ")
-
 user = (username, password)
 
-session = login(URL, user)
-
-page = session.get(URL)
-print(page)
+session = login(URL + "/Kampus1", user)
+courses = get_course_list(session, URL)
+print()
