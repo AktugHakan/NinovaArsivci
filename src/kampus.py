@@ -8,6 +8,7 @@ Course = namedtuple("Course", "code name link")
 COURSE_TITLE_OFFSET = 8
 
 def get_course_list(session):
+    global URL
     course_list = []
 
     page = BeautifulSoup(session.get(URL + "/Kampus1").content.decode("utf-8"), "lxml")
