@@ -1,11 +1,13 @@
 from collections import namedtuple
 from bs4 import BeautifulSoup
 from src.text_coloring import fail
+from src.NinovaUrl import URL
+
 
 Course = namedtuple("Course", "code name link")
 COURSE_TITLE_OFFSET = 8
 
-def get_course_list(session, URL):
+def get_course_list(session):
     course_list = []
 
     page = BeautifulSoup(session.get(URL + "/Kampus1").content.decode("utf-8"), "lxml")
@@ -20,7 +22,7 @@ def get_course_list(session, URL):
         name = ders_info[1].select("td")[2].text.strip()
         
         course_list.append(Course(code ,name, link))
-    for course in course_list:
-        print(course)
+
+    return course_list
 
 # https://ninova.itu.edu.tr/Sinif/2123.82531/SinifBilgileri

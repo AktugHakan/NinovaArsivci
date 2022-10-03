@@ -11,11 +11,6 @@ from sys import argv
 from src.login import login
 from src.kampus import get_course_list
 
-
-# ---CONSTANTS---
-URL = "https://ninova.itu.edu.tr"
-
-
 # ---MAIN---
 
 if(len(argv) == 3):
@@ -26,6 +21,5 @@ else:
     password = getpass("Şifreniz: ")
 user = (username, password)
 
-session = login(URL + "/Kampus1", user)
-courses = get_course_list(session, URL)
-print()
+session = login(user)
+courses = get_course_list(session)

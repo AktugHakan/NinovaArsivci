@@ -1,6 +1,7 @@
 from src import text_coloring
 import requests, logging
 from bs4 import BeautifulSoup
+from src.NinovaUrl import URL
 
 
 def check_connection():
@@ -12,7 +13,8 @@ def check_connection():
         return False
 
 
-def login(URL, SECURE_INFO):
+def login(SECURE_INFO):
+    URL = URL + "/Kampus1"
     HEADERS = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
         "Accept-Encoding": "gzip, deflate, br",
