@@ -11,7 +11,7 @@ from sys import argv
 from src.login import login
 from src.kampus import get_course_list
 from src.downloader import download_all_in_course
-from tkinter import filedialog as fd
+from tkinter import filedialog
 
 # ---MAIN---
 
@@ -26,6 +26,7 @@ user = (username, password)
 session = login(user)
 courses = get_course_list(session)
 
-download_directory = fd.askdirectory()
+download_directory = filedialog.askdirectory()
+
 for course in courses:
     download_all_in_course(session, course, download_directory)
