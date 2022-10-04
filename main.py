@@ -10,7 +10,7 @@ except:
 from sys import argv
 from src.login import login
 from src.kampus import get_course_list
-from src.downloader import download_all
+from src.downloader import download_all_in_course
 
 # ---MAIN---
 
@@ -25,4 +25,4 @@ user = (username, password)
 session = login(user)
 courses = get_course_list(session)
 
-download_all(session, courses[3])
+download_all_in_course(session, courses[1])
