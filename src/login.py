@@ -1,4 +1,4 @@
-from src import text_coloring
+from src import logger
 import requests, logging
 from bs4 import BeautifulSoup
 from src.NinovaUrl import URL
@@ -30,19 +30,13 @@ def login(SECURE_INFO):
     try:
         page = session.get(URL, headers=HEADERS)
     except:
-        logging.warning(
-            text_coloring.warning(
-                "Ninova'ya bağlanılamadı. İnternet bağlantı kontrol ediliyor."
-            )
-        )
+        logger.warning("Ninova sunucusuna bağlanılamadı.")
         if check_connection():
-            raise ConnectionError(
-                text_coloring.fail("Internet var ancak Ninova'ya bağlanılamıyor.")
-            )
+            logger.fail("Internet var ancak Ninova'ya bağlanılamıyor.")
+            exit()
         else:
-            raise ConnectionError(
-                text_coloring.fail("Internete erişim yok. Bağlantınızı kontrol edin.")
-            )
+            logger.fail("Internete erişim yok. Bağlantınızı kontrol edin.")
+            exit()
 
     page = BeautifulSoup(page.content, "lxml")
 
