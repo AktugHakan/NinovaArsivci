@@ -11,7 +11,7 @@ from sys import argv
 from src.login import login
 from src.kampus import get_course_list
 from src.downloader import download_all_in_course
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 
 # ---MAIN---
 
@@ -28,5 +28,11 @@ courses = get_course_list(session)
 
 download_directory = filedialog.askdirectory()
 
+merge = messagebox.askyesno(
+    "Klasörleri Birleştir veya Ayır",
+    "Sınıf dosyaları ve Ders dosyaları klasörlerini birleştir?",
+    icon="question",
+)
+
 for course in courses:
-    download_all_in_course(session, course, download_directory)
+    download_all_in_course(session, course, download_directory, merge)

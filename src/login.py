@@ -2,6 +2,7 @@ from src import logger
 import requests, logging
 from bs4 import BeautifulSoup
 from src.NinovaUrl import URL
+from time import perf_counter
 
 
 def check_connection():
@@ -45,10 +46,17 @@ def login(SECURE_INFO):
         post_data[field.get("name")] = field.get("value")
     post_data["ctl00$ContentPlaceHolder1$tbUserName"] = SECURE_INFO[0]
     post_data["ctl00$ContentPlaceHolder1$tbPassword"] = SECURE_INFO[1]
+
+    start = perf_counter()
     page = session.post(
         "https://girisv3.itu.edu.tr" + page.form.get("action")[1:], data=post_data
     )
+    end = perf_counter()
+    elapsed = end-start
+    logger.debug(f"Giriş yapma işlemi {elapsed} saniye sürdü")
+
     page = BeautifulSoup(page.content, "lxml")
     if page.find(id="ctl00_Header1_tdLogout") is None:
-        raise Exception("Giriş yapılamadı!")
+        logger.fail("Giriş yapılamadı!")
+        exit()
     return session

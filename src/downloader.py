@@ -1,4 +1,4 @@
-from tkinter import messagebox
+from time import perf_counter
 from bs4 import BeautifulSoup
 from src.NinovaUrl import URL
 from os import mkdir
@@ -9,14 +9,8 @@ SINIF_DOSYALARI_URL_EXTENSION = "/SinifDosyalari"
 DERS_DOSYALARI_URL_EXTENSION = "/DersDosyalari"
 
 # Currently does not traverse folders
-def download_all_in_course(session, course, base_download_directory):
+def download_all_in_course(session, course, base_download_directory, merge):
     global URL
-
-    merge = messagebox.askyesno(
-        "Klasörleri Birleştir veya Ayır",
-        "Sınıf dosyaları ve Ders dosyaları klasörlerini birleştir?",
-        icon="question",
-    )
 
     if not base_download_directory:
         logger.fail("Bir klasör seçmeniz gerekiyor.")
@@ -49,8 +43,11 @@ def download_all_in_course(session, course, base_download_directory):
             URL + course.link + SINIF_DOSYALARI_URL_EXTENSION
         ).content.decode("utf-8")
 
-        klasor = join(subdir_name, "Sınıf Dosyaları")
-        mkdir(klasor)
+        try:
+            klasor = join(subdir_name, "Sınıf Dosyaları")
+            mkdir(klasor)
+        except FileExistsError:
+            pass 
 
         _download_or_traverse(session, raw_html, klasor)
 
@@ -58,25 +55,35 @@ def download_all_in_course(session, course, base_download_directory):
             URL + course.link + DERS_DOSYALARI_URL_EXTENSION
         ).content.decode("utf-8")
 
-        klasor = join(subdir_name, "Ders Dosyaları")
-        mkdir(klasor)
+        try:
+            klasor = join(subdir_name, "Ders Dosyaları")
+            mkdir(klasor)
+        except FileExistsError:
+            pass 
 
         _download_or_traverse(session, raw_html, klasor)
 
 
 def _download_or_traverse(session, raw_html, destionation_folder):
-    rows = BeautifulSoup(raw_html, "lxml")
-    rows = rows.select_one(".dosyaSistemi table.data").find_all("tr")
+    try:
+        rows = BeautifulSoup(raw_html, "lxml")
+        rows = rows.select_one(".dosyaSistemi table.data").find_all("tr")
+    except:
+        return # if the 'file' is a link to another page
     rows.pop(0)  # first row is the header of the table
 
     for row in rows:
         file_a_tag = row.find("td").find("a")
         file_link = file_a_tag["href"]
         element_name = file_a_tag.text
+        start = perf_counter()
         resp = session.get(URL + file_link)
+        end = perf_counter()
+        logger.debug(f"Ninova'ya yapılan {element_name} isteği {end-start} saniyede yanıtlandı.")
         if "text/html" in resp.headers["content-type"]:
             subdir_name = join(destionation_folder, element_name)
             try:
+                logger.debug(f"{element_name} klasörü oluşturuluyor")
                 mkdir(subdir_name)
             except FileExistsError:
                 logger.debug(
