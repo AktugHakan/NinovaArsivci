@@ -74,12 +74,15 @@ def _download_or_traverse(session, raw_html, destionation_folder):
 
     for row in rows:
         file_a_tag = row.find("td").find("a")
-        file_link = file_a_tag["href"]
+        try:
+            file_link = file_a_tag["href"]
+        except:
+            return
         element_name = file_a_tag.text
         start = perf_counter()
         resp = session.get(URL + file_link)
         end = perf_counter()
-        logger.debug(f"Ninova'ya yapılan {element_name} isteği {end-start} saniyede yanıtlandı.")
+        logger.debug(f"Ninova'ya yapılan {element_name[:15]:<15} isteği {end-start} saniyede yanıtlandı.")
         if "text/html" in resp.headers["content-type"]:
             subdir_name = join(destionation_folder, element_name)
             try:
