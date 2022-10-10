@@ -21,13 +21,16 @@ python main.py
 ```
 
 ## S.S.S.
-1. "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin." diye bir hata alıyorum.
+1. "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin." diye bir hata alıyorum.  
+
 Programı arşivden çıkarırken src klasörünü de çıkarmalısın. "main.py" dosyası src klasörü içindeki dosyalarla birlikte çalışır.
 
-2. "No such file or directory" hatası alıyorum.
+2. "No such file or directory" hatası alıyorum.  
+
 Terminalin açıldığı klasör, main.py ile klasör olmalı.
 
-3. Şifremi giriyorum ama çalar mısın?
+3. Şifremi giriyorum ama çalar mısın?  
+
 Hayır.
 
 
