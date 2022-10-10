@@ -1,4 +1,8 @@
 # Makes the given text colored and return the colored text
+
+# DEBUG = True
+DEBUG = False
+
 def fail(message):
     _FAIL = "\033[91m"
     _ENDC = "\033[0m"
@@ -16,4 +20,5 @@ def verbose(message):
 
 
 def debug(message):
-    print("UUT: " + message)
+    if DEBUG:
+        print("UUT: " + message)
