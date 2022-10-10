@@ -1,9 +1,12 @@
 from src import logger
-import requests, logging
-from bs4 import BeautifulSoup
 from src.NinovaUrl import URL
 from time import perf_counter
-
+try:
+    from bs4 import BeautifulSoup
+    import requests
+except ModuleNotFoundError:
+    logger.fail("Gerekli kütüphaneler eksik. Yüklemek için 'pip install -r requirements.txt' komutunu çalıştırın.")
+    exit()
 
 def check_connection():
     CHECK_CONNECTIVITY_URL = "http://www.example.com/"

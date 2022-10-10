@@ -1,9 +1,11 @@
 from time import perf_counter
-from bs4 import BeautifulSoup
 from src.NinovaUrl import URL
 from os import mkdir
 from os.path import join
 from src import logger
+from bs4 import BeautifulSoup
+
+
 
 SINIF_DOSYALARI_URL_EXTENSION = "/SinifDosyalari"
 DERS_DOSYALARI_URL_EXTENSION = "/DersDosyalari"
