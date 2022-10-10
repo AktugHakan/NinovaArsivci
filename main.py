@@ -7,13 +7,19 @@ try:
 except:
     from getpass import getpass
 
-from src import logger
+
 from sys import argv
 from time import perf_counter
-from src.login import login
-from src.kampus import get_course_list
-from src.downloader import download_all_in_course
 from tkinter import filedialog, messagebox
+
+try:
+    from src import logger
+    from src.login import login
+    from src.kampus import get_course_list
+    from src.downloader import download_all_in_course
+except ModuleNotFoundError:
+    print("HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin.")
+
 
 # ---MAIN---
 start = perf_counter()
