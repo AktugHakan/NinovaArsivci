@@ -8,7 +8,7 @@ except ModuleNotFoundError:
     logger.fail("Gerekli kütüphaneler eksik. Yüklemek için 'pip install -r requirements.txt' komutunu çalıştırın.")
     exit()
 
-def check_connection():
+def check_connection() -> bool:
     CHECK_CONNECTIVITY_URL = "http://www.example.com/"
     try:
         requests.get(CHECK_CONNECTIVITY_URL)
@@ -17,7 +17,7 @@ def check_connection():
         return False
 
 
-def login(SECURE_INFO):
+def login(SECURE_INFO: tuple[str, str]) -> requests.Session:
     global URL
     URL = URL + "/Kampus1"
     HEADERS = {
