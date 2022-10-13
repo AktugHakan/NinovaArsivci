@@ -1,4 +1,10 @@
-# Ninova Arşivci v1
+## TEST AŞAMASINDAKİ ÖZELLİKLER
+* İndirme işlemi paralel hale getirildi. Aynı anda bir dosya indirmek yerine birkaç dosya indiriliyor bu sayede programın çalışma süresi yarı yarıya azalmalıdır.
+
+Eğer hata alırsanız, programı düzeltebilmem için "issues" bölümünden bildirin.
+
+# Ninova Arşivci v2 TEST
+
 Ninova Arşivci, [Ninova](https://ninova.itu.edu.tr/)'daki dosyaları topluca indirmek için yazılmış bir Python programıdır.
 (Ninova: İstanbul Teknik Üniversitesinin e-öğrenim merkezi)
 
