@@ -41,6 +41,8 @@ Hayır.
 * Programın tamamlanması süresi 3-4 dakika sürebilir.
 * Detaylı bilgileri görmek için src/logger.py dosyasındaki "DEBUG = False" satırını "DEBUG = True" ile değiştirin.
 
+## Deneysel Özellikleri Test Edin
+Eğer yeni özellikleri önceden keşfetmek ve programı geliştirmeme yardımcı olmak isterseniz sol üst köşede, üstünde "main" yazan butona tıklayın ve mevcut dalı Nightly ile değiştirin. Daha sonra normal kurulum adımlarını takip edin.
 
 ## Hata bildirimi
 Programın github sayfasındaki "issues" sekmesi altından, aldığınız hataları veya önerilerinizi yazabilirsiniz.
