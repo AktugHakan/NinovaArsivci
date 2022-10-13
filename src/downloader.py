@@ -1,3 +1,11 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+from kampus import Course
+if TYPE_CHECKING:
+    from requests import Session
+    from src.kampus import Course
+
 from time import perf_counter
 from src.NinovaUrl import URL
 from os import mkdir
@@ -11,12 +19,8 @@ SINIF_DOSYALARI_URL_EXTENSION = "/SinifDosyalari"
 DERS_DOSYALARI_URL_EXTENSION = "/DersDosyalari"
 
 # Currently does not traverse folders
-def download_all_in_course(session, course, base_download_directory, merge):
+def download_all_in_course(session: Session, course: Course, base_download_directory: str, merge: bool) -> None:
     global URL
-
-    if not base_download_directory:
-        logger.fail("Bir klasör seçmeniz gerekiyor.")
-        exit()
 
     subdir_name = join(base_download_directory, course.code)
 
@@ -66,7 +70,7 @@ def download_all_in_course(session, course, base_download_directory, merge):
         _download_or_traverse(session, raw_html, klasor)
 
 
-def _download_or_traverse(session, raw_html, destionation_folder):
+def _download_or_traverse(session: Session, raw_html: str, destionation_folder: str) -> None:
     try:
         rows = BeautifulSoup(raw_html, "lxml")
         rows = rows.select_one(".dosyaSistemi table.data").find_all("tr")

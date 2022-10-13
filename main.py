@@ -18,13 +18,15 @@ try:
     from src.kampus import get_course_list
     from src.downloader import download_all_in_course
 except ModuleNotFoundError:
-    print("HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin.")
+    print(
+        "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
+    )
 
 
 # ---MAIN---
 start = perf_counter()
 
-
+# Get username from command line, else prompt
 if len(argv) == 3:
     username = argv[1]
     password = argv[2]
@@ -45,6 +47,11 @@ merge = messagebox.askyesno(
     icon="question",
 )
 stop_user_delay = perf_counter()
+
+if not download_directory:
+    logger.fail("Bir klasör seçmeniz gerekiyor.")
+    exit()
+
 
 for course in courses:
     download_all_in_course(session, course, download_directory, merge)
