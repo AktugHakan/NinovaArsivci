@@ -16,7 +16,7 @@ try:
     from src import logger
     from src.login import login
     from src.kampus import get_course_list
-    from src.downloader import download_all_in_course
+    from src.task_handler import start_tasks
 except ModuleNotFoundError:
     print(
         "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
@@ -53,10 +53,7 @@ if not download_directory:
     logger.fail("Bir klasör seçmeniz gerekiyor.")
     exit()
 
-
-for course in courses:
-    download_all_in_course(session, course, download_directory, merge)
-
+start_tasks(session, courses, download_directory, merge)
 
 end = perf_counter()
 logger.verbose(
