@@ -1,11 +1,10 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
-
-from kampus import Course
 if TYPE_CHECKING:
     from requests import Session
     from src.kampus import Course
 
+from src.kampus import Course
 from time import perf_counter
 from src.NinovaUrl import URL
 from os import mkdir

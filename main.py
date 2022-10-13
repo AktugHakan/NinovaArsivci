@@ -21,6 +21,7 @@ except ModuleNotFoundError:
     print(
         "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
     )
+    exit()
 
 
 # ---MAIN---
