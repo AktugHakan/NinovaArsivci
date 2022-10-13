@@ -1,4 +1,5 @@
 from __future__ import annotations
+from concurrent.futures import thread
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -12,11 +13,13 @@ from os import mkdir
 from os.path import join
 from src import logger
 from bs4 import BeautifulSoup
+from threading import Thread
 
 
 SINIF_DOSYALARI_URL_EXTENSION = "/SinifDosyalari"
 DERS_DOSYALARI_URL_EXTENSION = "/DersDosyalari"
 
+thread_list: list[Thread] = []
 # Currently does not traverse folders
 def download_all_in_course(
     session: Session, course: Course, base_download_directory: str, merge: bool
@@ -70,6 +73,9 @@ def download_all_in_course(
 
         _download_or_traverse(session, raw_html, klasor)
 
+        for thread in thread_list:
+            thread.join()
+
 
 def _download_or_traverse(
     session: Session, raw_html: str, destionation_folder: str
@@ -103,7 +109,11 @@ def _download_or_traverse(
                 logger.debug(
                     f"{subdir_name} klasörü oluşturulmadı. Zaten böyle bir klasör var."
                 )
-            _download_or_traverse(session, resp.content.decode("utf-8"), subdir_name)
+            
+            folder_thread = Thread(target=_download_or_traverse, args=(session, resp.content.decode("utf-8"), subdir_name))
+            folder_thread.start()
+            thread_list.append(folder_thread)
+            # _download_or_traverse(session, resp.content.decode("utf-8"), subdir_name)
         else:
             file_name_offset = (
                 resp.headers["content-disposition"].index("filename=") + 9
