@@ -3,6 +3,7 @@
 # DEBUG = True
 DEBUG = False
 
+
 def fail(message):
     _FAIL = "\033[91m"
     _ENDC = "\033[0m"
