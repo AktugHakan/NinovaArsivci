@@ -1,7 +1,7 @@
 # Makes the given text colored and return the colored text
 
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 
 def fail(message):
