@@ -25,37 +25,38 @@ except ModuleNotFoundError:
 
 
 # ---MAIN---
-start = perf_counter()
+if __name__ == "__main__":
+    start = perf_counter()
 
-# Get username from command line, else prompt
-if len(argv) == 3:
-    username = argv[1]
-    password = argv[2]
-else:
-    username = input("Kullanıcı adı (@itu.edu.tr olmadan): ")
-    password = getpass("Şifreniz: ")
-user = (username, password)
+    # Get username from command line, else prompt
+    if len(argv) == 3:
+        username = argv[1]
+        password = argv[2]
+    else:
+        username = input("Kullanıcı adı (@itu.edu.tr olmadan): ")
+        password = getpass("Şifreniz: ")
+    user = (username, password)
 
-session = login(user)
-courses = get_course_list(session)
+    session = login(user)
+    courses = get_course_list(session)
 
-start_user_delay = perf_counter()
-download_directory = filedialog.askdirectory()
+    start_user_delay = perf_counter()
+    download_directory = filedialog.askdirectory()
 
-merge = messagebox.askyesno(
-    "Klasörleri Birleştir veya Ayır",
-    "Sınıf dosyaları ve Ders dosyaları klasörlerini birleştir?",
-    icon="question",
-)
-stop_user_delay = perf_counter()
+    merge = messagebox.askyesno(
+        "Klasörleri Birleştir veya Ayır",
+        "Sınıf dosyaları ve Ders dosyaları klasörlerini birleştir?",
+        icon="question",
+    )
+    stop_user_delay = perf_counter()
 
-if not download_directory:
-    logger.fail("Bir klasör seçmeniz gerekiyor.")
-    exit()
+    if not download_directory:
+        logger.fail("Bir klasör seçmeniz gerekiyor.")
+        exit()
 
-start_tasks(session, courses, download_directory, merge)
+    start_tasks(session, courses, download_directory, merge)
 
-end = perf_counter()
-logger.verbose(
-    f"İş {(end-start) - (stop_user_delay-start_user_delay)} saniyede tamamlandı."
-)
+    end = perf_counter()
+    logger.verbose(
+        f"İş {(end-start) - (stop_user_delay-start_user_delay)} saniyede tamamlandı."
+    )
