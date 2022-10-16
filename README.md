@@ -1,7 +1,7 @@
 ## TEST AŞAMASINDAKİ ÖZELLİKLER
 * İndirme işlemi paralel hale getirildi. Aynı anda bir dosya indirmek yerine birkaç dosya indiriliyor bu sayede programın çalışma süresi yarı yarıya azalmalıdır.
 
-Eğer hata alırsanız, programı düzeltebilmem için "issues" bölümünden bildirin.
+*Eğer hata alırsanız, programı düzeltebilmem için "issues" bölümünden bildirin.*
 
 # Ninova Arşivci v2 TEST
 
