@@ -1,14 +1,18 @@
 from src import logger
 from src.NinovaUrl import URL
 from time import perf_counter
+
 try:
     from bs4 import BeautifulSoup
     import requests
 except ModuleNotFoundError:
-    logger.fail("Gerekli kütüphaneler eksik. Yüklemek için 'pip install -r requirements.txt' komutunu çalıştırın.")
+    logger.fail(
+        "Gerekli kütüphaneler eksik. Yüklemek için 'pip install -r requirements.txt' komutunu çalıştırın."
+    )
     exit()
 
-def check_connection():
+
+def check_connection() -> bool:
     CHECK_CONNECTIVITY_URL = "http://www.example.com/"
     try:
         requests.get(CHECK_CONNECTIVITY_URL)
@@ -17,7 +21,7 @@ def check_connection():
         return False
 
 
-def login(SECURE_INFO):
+def login(SECURE_INFO: tuple[str, str]) -> requests.Session:
     global URL
     URL = URL + "/Kampus1"
     HEADERS = {
@@ -55,7 +59,7 @@ def login(SECURE_INFO):
         "https://girisv3.itu.edu.tr" + page.form.get("action")[1:], data=post_data
     )
     end = perf_counter()
-    elapsed = end-start
+    elapsed = end - start
     logger.debug(f"Giriş yapma işlemi {elapsed} saniye sürdü")
 
     page = BeautifulSoup(page.content, "lxml")
