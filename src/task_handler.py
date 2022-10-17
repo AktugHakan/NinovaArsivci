@@ -28,6 +28,7 @@ def start_tasks(
     core2.join()
 
 
+# Launches a thread for each course in Ninova
 def thread_launcher(
     session: Session, courses: list[Course], download_directory: str, merge: bool
 ) -> None:
