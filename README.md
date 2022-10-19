@@ -70,7 +70,7 @@ python main.py -u Bee20 passwd -debug -core 5
 3. Şifremi giriyorum ama çalar mısın?  
   Hayır.
 
-4. İndirme klasörünü "-d" komutu ile komut satırı üzerinden verdiğim halde klasör seçme penceresi açılıyor.
+4. İndirme klasörünü "-d" komutu ile komut satırı üzerinden verdiğim halde klasör seçme penceresi açılıyor.  
   Parametre olarak verdiğin yolu kontrol et.
 
 
