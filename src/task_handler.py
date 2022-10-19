@@ -3,12 +3,10 @@ from asyncio.log import logger
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from requests import Session
     from src.kampus import Course
 
-import copy
 from threading import Thread
-from multiprocessing import Process
+from multiprocessing import Process, Value
 
 from src.downloader import download_all_in_course
 from src.configuration import Config
@@ -34,9 +32,12 @@ def start_tasks(courses: list[Course]) -> None:
         else:
             fragmented_list = courses[fragment_length * i : fragment_length * (i + 1)]
 
+        settings = Config.get_settings_tuple()
+        priiittt = Config.get_settings_dict()
+
         core = Process(
             target=thread_launcher,
-            args=(fragmented_list,),
+            args=(fragmented_list, settings),
         )
         core.start()
         core_list.append(core)
@@ -47,7 +48,8 @@ def start_tasks(courses: list[Course]) -> None:
 
 
 # Launches a thread for each course in Ninova
-def thread_launcher(courses: list[Course]) -> None:
+def thread_launcher(courses: list[Course], settings) -> None:
+    Config.load_from_tuple(settings)
     proc_list: list[Thread] = []
     for course in courses:
         session_copy = Config.get_session_copy()

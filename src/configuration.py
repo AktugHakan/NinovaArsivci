@@ -61,8 +61,29 @@ class Config:
         cls.session = session
 
     @classmethod
+    def get_settings_tuple(cls):
+        return (cls.debug, cls.user, cls.base_path, cls.session, cls.merge, cls.first_run, cls.core_count)
+
+    @classmethod
+    def load_from_tuple(cls, settings: tuple):
+        cls.debug = settings[0]
+        cls.user = settings[1]
+        cls.base_path = settings[2]
+        cls.session = settings[3]
+        cls.merge = settings[4]
+        cls.first_run = settings[5]
+        cls.core_count = settings[6]
+
+
+
+
+    @classmethod
     def get_session_copy(cls):
         return copy.deepcopy(cls.session)
+
+    @classmethod
+    def get_settings_dict(cls):
+        return cls.__dict__
 
     @classmethod
     def init_config(cls):
