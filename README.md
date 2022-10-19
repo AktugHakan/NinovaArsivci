@@ -1,6 +1,7 @@
 ## TEST AŞAMASINDAKİ ÖZELLİKLER
 * Artık belli bir boyuttan (varsayılan 5 MB) büyük dosyalar için ayrı iş parçacıkları açılıyor. Bu sayede büyük boyuttaki dosyanın indirmesi, klasör içindeki diğer dosyaların indirilmesini tıkamıyor.
 * Daha okunaklı ve geliştirilebilir bir kod mimarisine geçildi. İleride gelmesi planlanan özelliklerin uygulanabilmesi kolaylaştı.
+* Komut satırı parametreleri eklendi. Detaylı bilgi için aşağıdaki "Komut Satırı" başlığına göz atın.
 
 *Eğer hata alırsanız, programı düzeltebilmem için "issues" bölümünden bildirin.*
 
@@ -26,19 +27,52 @@ pip install -r requirements.txt
 ```bash
 python main.py
 ```
+### Komut satırı komutları
+Kullanımı kolaylaştırmak ve otomasyonlara kolaylık sağlamak adına komut satırı parametreleri getirildi. Komutlar bir arada kullanılabilir ve sıralamaları önemli değildir.
+
+1. "-u username password"
+Bu komutu kullanarak kullanıcı adı ve şifrenizi komut satırı üzerinden verebilirsiniz. Bu komut kullanıldığı taktirde program çalışırken kullanıcı adı ve şifre sorulmaz.
+Örnek kullanım:
+```bash
+python main.py -u bee20 psswd
+```
+2. "-d klasör"
+Bu komut ile hangi klasöre indirileceğini komut satırından seçebilirsiniz. Bu komut kullanıldığı taktirde program çalışırken indirme için klasör seçme penceresi açılmaz.
+Örnek kullanım:
+```bash
+python main.py -d "C:\Users\Bee\Desktop\Ninova"
+```
+
+3. "-debug" ve "-verbose"
+Debug ve verbose bilgisini etkinleştirir. Verbose hangi işlemin kaç saniye sürdüğü bilgisini, debug ise daha detaylı bilgiler içerir. Debug modu seçildiği taktirde verbose komutları da görünecektir.
+```bash
+python main.py -verbose
+```
+
+4. "-core cekirdek_sayisi"
+Bilgisayarınızda aynı anda kaç çekirdek ile işlem yapılacağını belirtir. Varsayılan değeri 2'dir. Çok fazla seçildiği taktirde program, otomatik olarak çekirdek sayısını düşürür.
+```bash
+python main.py -core 4
+```
+
+Komutların bir arada kullanımına örnek:
+```bash
+python main.py -u Bee20 passwd -debug -core 5
+```
 
 ## S.S.S.
 1. "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin." diye bir hata alıyorum.  
-
-Programı arşivden çıkarırken src klasörünü de çıkarmalısın. "main.py" dosyası src klasörü içindeki dosyalarla birlikte çalışır.
+  Programı arşivden çıkarırken src klasörünü de çıkarmalısın. "main.py" dosyası src klasörü içindeki dosyalarla birlikte çalışır.
 
 2. "No such file or directory" hatası alıyorum.  
-
-Terminalin açıldığı klasör, main.py ile klasör olmalı.
+  Terminalin açıldığı klasör, main.py ile klasör olmalı.
 
 3. Şifremi giriyorum ama çalar mısın?  
+  Hayır.
 
-Hayır.
+4. İndirme klasörünü "-d" komutu ile komut satırı üzerinden verdiğim halde klasör seçme penceresi açılıyor.
+  Parametre olarak verdiğin yolu kontrol et.
+
 
 
 ## Notlar
