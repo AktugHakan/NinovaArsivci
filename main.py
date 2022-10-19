@@ -3,16 +3,8 @@
 
 # ---IMPORTS---
 try:
-    from pwinput import pwinput as getpass
-except:
-    from getpass import getpass
+    from src.configuration import Config
 
-
-from sys import argv
-from time import perf_counter
-from tkinter import filedialog, messagebox
-
-try:
     from src import logger
     from src.login import login
     from src.kampus import get_course_list
@@ -23,40 +15,19 @@ except ModuleNotFoundError:
     )
     exit()
 
-
 # ---MAIN---
 if __name__ == "__main__":
-    start = perf_counter()
-
     # Get username from command line, else prompt
-    if len(argv) == 3:
-        username = argv[1]
-        password = argv[2]
-    else:
-        username = input("Kullanıcı adı (@itu.edu.tr olmadan): ")
-        password = getpass("Şifreniz: ")
-    user = (username, password)
+    Config.init_config()
 
-    session = login(user)
-    courses = get_course_list(session)
+    session = login(Config.user)
+    Config.set_session(session)
 
-    start_user_delay = perf_counter()
-    download_directory = filedialog.askdirectory()
+    courses = get_course_list()
 
-    merge = messagebox.askyesno(
-        "Klasörleri Birleştir veya Ayır",
-        "Sınıf dosyaları ve Ders dosyaları klasörlerini birleştir?",
-        icon="question",
-    )
-    stop_user_delay = perf_counter()
+    start_tasks(courses)
 
-    if not download_directory:
-        logger.fail("Bir klasör seçmeniz gerekiyor.")
-        exit()
 
-    start_tasks(session, courses, download_directory, merge)
 
-    end = perf_counter()
-    logger.verbose(
-        f"İş {(end-start) - (stop_user_delay-start_user_delay)} saniyede tamamlandı."
-    )
+
+

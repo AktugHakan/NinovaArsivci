@@ -1,8 +1,12 @@
 # Makes the given text colored and return the colored text
 
-DEBUG = True
-# DEBUG = False
+from time import perf_counter
 
+DEBUG = True
+
+def set_debug(toDebug: bool):
+    global DEBUG
+    DEBUG = toDebug
 
 def fail(message):
     _FAIL = "\033[91m"
@@ -23,3 +27,18 @@ def verbose(message):
 def debug(message):
     if DEBUG:
         print("UUT: " + message)
+
+
+def speed_measure(debug_name):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            start = perf_counter()
+            return_val = func(*args, **kwargs)
+            end = perf_counter()
+                
+            verbose(f"{debug_name} işlemi {end-start} saniyede tamamlandı.")
+
+            return return_val
+    
+        return wrapper
+    return decorator

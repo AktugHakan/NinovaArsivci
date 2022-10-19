@@ -1,21 +1,21 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from requests import Session
-
 from collections import namedtuple
 from bs4 import BeautifulSoup
-from src.NinovaUrl import URL
 
+from src.configuration import Config
+from src.NinovaUrl import URL
 
 Course = namedtuple("Course", "code name link")
 COURSE_TITLE_OFFSET = 8
 
 # Returns the list of Courses object that has the course code, course name, and ninova link to course.
-def get_course_list(session: Session) -> list[Course]:
+def get_course_list() -> list[Course]:
     global URL
     course_list = []
+
+    session = Config.session
 
     page = BeautifulSoup(session.get(URL + "/Kampus1").content.decode("utf-8"), "lxml")
 

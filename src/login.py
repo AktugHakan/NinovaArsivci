@@ -1,3 +1,4 @@
+from src.classes import User
 from src import logger
 from src.NinovaUrl import URL
 from time import perf_counter
@@ -21,7 +22,7 @@ def check_connection() -> bool:
         return False
 
 
-def login(SECURE_INFO: tuple[str, str]) -> requests.Session:
+def login(user_secure_info: User) -> requests.Session:
     global URL
     URL = URL + "/Kampus1"
     HEADERS = {
@@ -51,19 +52,23 @@ def login(SECURE_INFO: tuple[str, str]) -> requests.Session:
     post_data = dict()
     for field in page.find_all("input"):
         post_data[field.get("name")] = field.get("value")
-    post_data["ctl00$ContentPlaceHolder1$tbUserName"] = SECURE_INFO[0]
-    post_data["ctl00$ContentPlaceHolder1$tbPassword"] = SECURE_INFO[1]
+    post_data["ctl00$ContentPlaceHolder1$tbUserName"] = user_secure_info.username
+    post_data["ctl00$ContentPlaceHolder1$tbPassword"] = user_secure_info.password
 
-    start = perf_counter()
-    page = session.post(
-        "https://girisv3.itu.edu.tr" + page.form.get("action")[1:], data=post_data
-    )
-    end = perf_counter()
-    elapsed = end - start
-    logger.debug(f"Giriş yapma işlemi {elapsed} saniye sürdü")
+    page = _login_request(session, post_data, page)
 
     page = BeautifulSoup(page.content, "lxml")
     if page.find(id="ctl00_Header1_tdLogout") is None:
         logger.fail("Giriş yapılamadı!")
         exit()
     return session
+
+@logger.speed_measure("Giriş yapma")
+def _login_request(session: requests.Session, post_data: dict, page: BeautifulSoup):
+    page = session.post(
+        "https://girisv3.itu.edu.tr" + page.form.get("action")[1:], data=post_data
+    )
+    return page
+
+# Function debug names
+
