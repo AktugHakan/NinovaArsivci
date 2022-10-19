@@ -1,5 +1,6 @@
 ## TEST AŞAMASINDAKİ ÖZELLİKLER
 * Artık belli bir boyuttan (varsayılan 5 MB) büyük dosyalar için ayrı iş parçacıkları açılıyor. Bu sayede büyük boyuttaki dosyanın indirmesi, klasör içindeki diğer dosyaların indirilmesini tıkamıyor.
+* Daha okunaklı ve geliştirilebilir bir kod mimarisine geçildi. İleride gelmesi planlanan özelliklerin uygulanabilmesi kolaylaştı.
 
 *Eğer hata alırsanız, programı düzeltebilmem için "issues" bölümünden bildirin.*
 
