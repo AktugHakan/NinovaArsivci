@@ -4,11 +4,11 @@
 # ---IMPORTS---
 try:
     from src.configuration import Config
-
     from src import logger
     from src.login import login
     from src.kampus import get_course_list
     from src.task_handler import start_tasks
+    from src.argv_handler import get_args
 except ModuleNotFoundError:
     print(
         "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
@@ -16,18 +16,16 @@ except ModuleNotFoundError:
     exit()
 
 # ---MAIN---
-if __name__ == "__main__":
-    # Get username from command line, else prompt
-    Config.init_config()
-
+@logger.speed_measure("Program", False)
+def main():
     session = login(Config.user)
     Config.set_session(session)
-
     courses = get_course_list()
-
     start_tasks(courses)
 
 
-
-
-
+# ---Program driving code---
+if __name__ == "__main__":
+    # Get username from command line, else prompt
+    Config.init_config()
+    main()

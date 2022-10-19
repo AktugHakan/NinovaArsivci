@@ -1,6 +1,4 @@
 from __future__ import annotations
-from concurrent.futures import thread
-from time import perf_counter
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -145,14 +143,12 @@ def _traverse_folder(session, folder_url, current_folder, new_folder_name):
     folder_thread.start()
     thread_list.append(folder_thread)
 
-
+@logger.speed_measure("indirme işlemi", False, True)
 def _download_file(session, file_url, destination_folder):
-    start = perf_counter()
     resp = session.get(file_url)
-    end = perf_counter()
-    
     file_name_offset = resp.headers["content-disposition"].index("filename=") + 9
     file_name = resp.headers["content-disposition"][file_name_offset:]
-    logger.debug(f"{file_name:<15} dosyası {end-start} saniyede indirildi.")
     with open(destination_folder + "/" + file_name, "wb") as bin:
         bin.write(resp.content)
+
+    return file_name

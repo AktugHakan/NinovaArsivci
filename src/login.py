@@ -63,7 +63,7 @@ def login(user_secure_info: User) -> requests.Session:
         exit()
     return session
 
-@logger.speed_measure("Giriş yapma")
+@logger.speed_measure("Giriş yapma", False, False)
 def _login_request(session: requests.Session, post_data: dict, page: BeautifulSoup):
     page = session.post(
         "https://girisv3.itu.edu.tr" + page.form.get("action")[1:], data=post_data

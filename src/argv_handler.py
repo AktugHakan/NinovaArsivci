@@ -44,7 +44,7 @@ def get_args(**arg_flags) -> dict:
                     for _ in range(arg_flags[flag]):
                         arg_index += 1
 
-                        if argv[arg_index].startswith("-"):
+                        if arg_index >= len(argv) or argv[arg_index].startswith("-"):
                             raise Exception(
                                 f"Not enough parameter(s) given for the flag '-{flag}'"
                             )
