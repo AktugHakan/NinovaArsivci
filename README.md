@@ -1,14 +1,10 @@
-## TEST AŞAMASINDAKİ ÖZELLİKLER
-* Artık belli bir boyuttan (varsayılan 5 MB) büyük dosyalar için ayrı iş parçacıkları açılıyor. Bu sayede büyük boyuttaki dosyanın indirmesi, klasör içindeki diğer dosyaların indirilmesini tıkamıyor.
-* Daha okunaklı ve geliştirilebilir bir kod mimarisine geçildi. İleride gelmesi planlanan özelliklerin uygulanabilmesi kolaylaştı.
-* Komut satırı parametreleri eklendi. Detaylı bilgi için aşağıdaki "Komut Satırı" başlığına göz atın.
-
-*Eğer hata alırsanız, programı düzeltebilmem için "issues" bölümünden bildirin.*
-
-# Ninova Arşivci v2.1 TEST
+# Ninova Arşivci v2.1
 
 Ninova Arşivci, [Ninova](https://ninova.itu.edu.tr/)'daki dosyaları topluca indirmek için yazılmış bir Python programıdır.
 (Ninova: İstanbul Teknik Üniversitesinin e-öğrenim merkezi)
+
+## v2 Yeni Özellikler
+* Birden fazla iş parçacığı ve süreç ile paralelleştirilmiş indirme işlemi, önceki sürüme göre **3 kat** daha hızlı.
 
 ## Kurulum
 Bu program [Python yorumlayıcısı (interpreter)](https://www.python.org/downloads/) gerektirir.
@@ -82,6 +78,8 @@ python main.py -u Bee20 passwd -debug -core 5
 * Programın tamamlanması süresi 3-4 dakika sürebilir.
 * Detaylı bilgileri görmek için src/logger.py dosyasındaki "DEBUG = False" satırını "DEBUG = True" ile değiştirin.
 
+## Deneysel Özellikleri Test Edin
+Eğer yeni özellikleri önceden keşfetmek ve programı geliştirmeme yardımcı olmak isterseniz sol üst köşede, üstünde "main" yazan butona tıklayın ve mevcut dalı Nightly ile değiştirin. Daha sonra normal kurulum adımlarını takip edin.
 
 ## Hata bildirimi
 Programın github sayfasındaki "issues" sekmesi altından, aldığınız hataları veya önerilerinizi yazabilirsiniz.
