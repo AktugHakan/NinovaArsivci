@@ -33,7 +33,6 @@ def start_tasks(courses: list[Course]) -> None:
             fragmented_list = courses[fragment_length * i : fragment_length * (i + 1)]
 
         settings = Config.get_settings_tuple()
-        priiittt = Config.get_settings_dict()
 
         core = Process(
             target=thread_launcher,
