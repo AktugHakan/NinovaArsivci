@@ -11,7 +11,7 @@ try:
     from src.argv_handler import get_args
 except ModuleNotFoundError:
     print(
-        "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
+        "HATA! Kütphaneler yüklenemedi. 'src' klasörü silinmiş veya yeri değişmiş olabilir."
     )
     exit()
 
@@ -20,12 +20,13 @@ except ModuleNotFoundError:
 def main():
     session = login(Config.user)
     Config.set_session(session)
+
     courses = get_course_list()
     start_tasks(courses)
 
 
 # ---Program driving code---
 if __name__ == "__main__":
-    # Get username from command line, else prompt
+    # Config.init should be called before main, since main uses user info in the config
     Config.init_config()
     main()
