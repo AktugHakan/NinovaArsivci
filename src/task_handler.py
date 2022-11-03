@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from src.kampus import Course
 
 from threading import Thread
-from multiprocessing import Process, Value
+from multiprocessing import Process
 
 from src.downloader import download_all_in_course
 from src.configuration import Config
