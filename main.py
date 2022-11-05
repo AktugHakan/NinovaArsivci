@@ -9,6 +9,7 @@ try:
     from src.kampus import get_course_list
     from src.task_handler import start_tasks
     from src.argv_handler import get_args
+    from src.db_handler import DB
 except ModuleNotFoundError:
     print(
         "HATA! Kütphaneler yüklenemedi. 'src' klasörü silinmiş veya yeri değişmiş olabilir."
@@ -28,5 +29,6 @@ def main():
 # ---Program driving code---
 if __name__ == "__main__":
     # Config.init should be called before main, since main uses user info in the config
-    Config.init_config()
+    Config.init()
+    DB.init()
     main()

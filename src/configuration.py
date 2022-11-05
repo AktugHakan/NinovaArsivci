@@ -17,6 +17,7 @@ try:
     from src.argv_handler import get_args
     from src.classes import User
     from src import logger
+    from src.db_handler import DATABASE_FILE_NAME
 except ModuleNotFoundError:
     print(
         "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
@@ -86,7 +87,7 @@ class Config:
         return cls.__dict__
 
     @classmethod
-    def init_config(cls):
+    def init(cls):
         """
         First thing to run. Get config info from various sources
 
@@ -102,6 +103,9 @@ class Config:
             logger.enable_debug()
         if verbose:
             logger.enable_verbose()
+
+        # ---First Run Detection---
+        first_run = not exists(join(download_directory, DATABASE_FILE_NAME))
 
         # ---User Info From Args---
         if "u" in config_dict:
@@ -133,8 +137,7 @@ class Config:
             logger.fail("Bir klasör seçmeniz gerekiyor.")
             exit()
 
-        # ---First Run Detection---
-        first_run = not exists(join(download_directory, "files.db"))
+        #
         if first_run:
             merge = messagebox.askyesno(
                 "Klasörleri Birleştir",
