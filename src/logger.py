@@ -18,6 +18,7 @@ def fail(message):
     _FAIL = "\033[91m"
     _ENDC = "\033[0m"
     print("HATA! " + _FAIL + message + _ENDC)
+    exit()
 
 
 def warning(message):
