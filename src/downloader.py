@@ -14,6 +14,7 @@ from threading import Thread
 from src.configuration import Config
 from src.kampus import Course
 from src.NinovaUrl import URL
+from src.db_handler import DB, FILE_STATUS
 
 MIN_FILE_SIZE_TO_LAUNCH_NEW_THREAD = 5  # in mb
 
@@ -21,6 +22,8 @@ SINIF_DOSYALARI_URL_EXTENSION = "/SinifDosyalari"
 DERS_DOSYALARI_URL_EXTENSION = "/DersDosyalari"
 
 thread_list: list[Thread] = []
+
+
 def download_all_in_course(session: Session, course: Course) -> None:
     global URL
 
@@ -105,12 +108,19 @@ def _download_or_traverse(
             elif file_size > MIN_FILE_SIZE_TO_LAUNCH_NEW_THREAD:  # mb
                 large_file_thread = Thread(
                     target=_download_file,
-                    args=(session, URL + file_link, destionation_folder),
+                    args=(
+                        session,
+                        URL + file_link,
+                        destionation_folder,
+                        DB.get_new_cursor(),
+                    ),
                 )
                 large_file_thread.start()
                 thread_list.append(large_file_thread)
             else:
-                _download_file(session, URL + file_link, destionation_folder)
+                _download_file(
+                    session, URL + file_link, destionation_folder, DB.get_new_cursor()
+                )
 
 
 def _parse_file_info(row: element.Tag):
@@ -143,12 +153,21 @@ def _traverse_folder(session, folder_url, current_folder, new_folder_name):
     folder_thread.start()
     thread_list.append(folder_thread)
 
+
 @logger.speed_measure("indirme işlemi", False, True)
-def _download_file(session, file_url, destination_folder):
-    resp = session.get(file_url)
-    file_name_offset = resp.headers["content-disposition"].index("filename=") + 9
-    file_name = resp.headers["content-disposition"][file_name_offset:]
-    with open(destination_folder + "/" + file_name, "wb") as bin:
-        bin.write(resp.content)
+def _download_file(session, file_url: str, destination_folder: str, cursor):
+    file_status = DB.check_file_status( int(file_url[file_url.find("?g") + 2 :]) , cursor)
+    match file_status:
+        case FILE_STATUS.NEW:
+            resp = session.get(file_url)
+            file_name_offset = resp.headers["content-disposition"].index("filename=") + 9
+            file_name = resp.headers["content-disposition"][file_name_offset:]
+            file_full_name = join(destination_folder, file_name)
+            with open(file_full_name, "wb") as bin:
+                bin.write(resp.content)
+            DB.add_file( int(file_url[file_url.find("?g") + 2 :]) , file_full_name, cursor)
+
+        case FILE_STATUS.EXISTS:
+            logger.verbose("Varolan dosya tekrardan indirilmedi")
 
     return file_name

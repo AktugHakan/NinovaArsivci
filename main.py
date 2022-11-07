@@ -30,5 +30,5 @@ def main():
 if __name__ == "__main__":
     # Config.init should be called before main, since main uses user info in the config
     Config.init()
-    DB.init()
+    DB.init(Config.base_path, Config.first_run)
     main()

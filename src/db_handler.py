@@ -4,7 +4,6 @@ from os.path import join, exists
 from enum import Enum
 from zlib import crc32
 
-from src.configuration import Config
 from src import logger
 
 DATABASE_FILE_NAME = "ninova_arsivci.db"
@@ -26,21 +25,21 @@ class DB:
     to_add: Queue = Queue()
 
     @classmethod
-    def init(cls, base_directory: str):
+    def init(cls, base_directory: str, first_run: bool):
         db_path = join(base_directory, DATABASE_FILE_NAME)
         try:
-            cls.connection = sqlite3.connect(db_path)
+            cls.connection = sqlite3.connect(db_path, check_same_thread=False)
             cursor = cls.connection.cursor()
             logger.debug("Veri tabanına bağlanıldı.")
         except:
             logger.fail("Veri tabanına bağlanılamadı.")
 
-        if Config.first_run:
+        if first_run:
             cursor.execute(TABLE_CREATION_QUERY)
-            logger.info("Veri tabanı ilk çalıştırma için hazırlandı.")
+            logger.verbose("Veri tabanı ilk çalıştırma için hazırlandı.")
         else:
-            cursor.execute(TABLE_CHECK_QUERY)
-            if cursor.getCount() < 1:
+            cursor.execute(TABLE_CHECK_QUERY)      
+            if cursor.fetchone()[0] != "files":
                 logger.fail(
                     "Veri tabanı bozulmuş. 'ninova_arsivci.db' dosyasını silip tekrar başlatın. Silme işlemi sonrasında tüm dosyalar yeniden indirilir."
                 )
@@ -52,14 +51,16 @@ class DB:
     @classmethod
     def check_file_status(cls, file_id:int, cursor: sqlite3.Cursor):
         cursor.execute(SELECT_FILE_BY_ID_QUERY, (file_id,))
-        if cursor.getCount() > 0:
-            for deleted, id in cursor:
-                if file_id != id:
-                    logger.fail("Eş zamanlı erişim, race condition oluşturdu. Veri tabanından gelen bilgi, bu dosyaya ait değil.")
-                if deleted:
-                    return FILE_STATUS.DELETED
-                else:
-                    return FILE_STATUS.EXISTS
+        file = cursor.fetchone()
+        if file:
+            deleted, id = file
+            if file_id != id:
+                logger.fail("Eş zamanlı erişim, race condition oluşturdu. Veri tabanından gelen bilgi, bu dosyaya ait değil.")
+                
+            if deleted:
+                return FILE_STATUS.DELETED
+            else:
+                return FILE_STATUS.EXISTS
         else:
             return FILE_STATUS.NEW
 

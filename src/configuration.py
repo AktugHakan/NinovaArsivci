@@ -17,7 +17,7 @@ try:
     from src.argv_handler import get_args
     from src.classes import User
     from src import logger
-    from src.db_handler import DATABASE_FILE_NAME
+    from src.db_handler import DATABASE_FILE_NAME, DB
 except ModuleNotFoundError:
     print(
         "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
@@ -31,6 +31,7 @@ class Config:
     Use class functions and static variables instead
     Initialize with init_config method
     """
+
     debug: bool
     user: User
     base_path: str
@@ -63,7 +64,17 @@ class Config:
 
     @classmethod
     def get_settings_tuple(cls):
-        return (cls.debug, cls.user, cls.base_path, cls.session, cls.merge, cls.first_run, cls.core_count)
+        return (
+            cls.debug,
+            cls.user,
+            cls.base_path,
+            cls.session,
+            cls.merge,
+            cls.first_run,
+            cls.core_count,
+            DB.connection,
+            DB.to_add,
+        )
 
     @classmethod
     def load_from_tuple(cls, settings: tuple):
@@ -74,9 +85,8 @@ class Config:
         cls.merge = settings[4]
         cls.first_run = settings[5]
         cls.core_count = settings[6]
-
-
-
+        DB.connection = settings[7]
+        DB.to_add = settings[8]
 
     @classmethod
     def get_session_copy(cls):
@@ -103,9 +113,6 @@ class Config:
             logger.enable_debug()
         if verbose:
             logger.enable_verbose()
-
-        # ---First Run Detection---
-        first_run = not exists(join(download_directory, DATABASE_FILE_NAME))
 
         # ---User Info From Args---
         if "u" in config_dict:
@@ -137,7 +144,9 @@ class Config:
             logger.fail("Bir klasör seçmeniz gerekiyor.")
             exit()
 
-        #
+        # ---First Run Detection---
+        first_run = not exists(join(download_directory, DATABASE_FILE_NAME))
+
         if first_run:
             merge = messagebox.askyesno(
                 "Klasörleri Birleştir",
@@ -145,7 +154,8 @@ class Config:
                 icon="question",
             )
         else:
-            pass  # get "merge" from db
+            # TEMPORARY SOLUTION!!!
+            merge = False  # get "merge" from db
 
         # Save the changes
         cls.set_initial_attr(
