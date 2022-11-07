@@ -71,7 +71,12 @@ class DB:
         if exists(path):
             with open(path, "rb") as file:
                 hash = crc32(file.read())
-                cursor.execute(FILE_INSERTION_QUERY, (id, path, hash))
+                try:
+                    cursor.execute(FILE_INSERTION_QUERY, (id, path, hash))
+                except Exception as e:
+                    logger.fail(
+                        str(e) + "\n The file_path is " +path   
+                    )
         else:
             logger.fail("Given file to add to DB, cannot found in disk.")
 
