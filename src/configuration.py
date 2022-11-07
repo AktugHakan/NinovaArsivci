@@ -73,6 +73,7 @@ class Config:
             cls.first_run,
             cls.core_count,
             DB.to_add,
+            DB.db_path
         )
 
     @classmethod
@@ -85,6 +86,8 @@ class Config:
         cls.first_run = settings[5]
         cls.core_count = settings[6]
         DB.to_add = settings[7]
+        DB.connect(settings[8])
+
 
     @classmethod
     def get_session_copy(cls):
