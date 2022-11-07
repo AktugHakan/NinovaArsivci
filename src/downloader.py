@@ -159,7 +159,7 @@ def _download_file(session, file_url: str, destination_folder: str, cursor):
     file_status = DB.check_file_status(int(file_url[file_url.find("?g") + 2 :]), cursor)
     match file_status:
         case FILE_STATUS.NEW:
-            file_name, file_binary = _download_from_server()
+            file_name, file_binary = _download_from_server(session, file_url)
             file_full_name = join(destination_folder, file_name)
             while exists(file_full_name):
                 ex_file = open(file_full_name, "rb")

@@ -72,7 +72,6 @@ class Config:
             cls.merge,
             cls.first_run,
             cls.core_count,
-            DB.connection,
             DB.to_add,
         )
 
@@ -85,8 +84,7 @@ class Config:
         cls.merge = settings[4]
         cls.first_run = settings[5]
         cls.core_count = settings[6]
-        DB.connection = settings[7]
-        DB.to_add = settings[8]
+        DB.to_add = settings[7]
 
     @classmethod
     def get_session_copy(cls):
