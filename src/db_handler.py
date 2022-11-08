@@ -1,3 +1,4 @@
+from collections import namedtuple
 import sqlite3
 from multiprocessing import Queue
 from os.path import join, exists
@@ -20,6 +21,7 @@ class FILE_STATUS(Enum):
     DELETED = 1
     EXISTS = 2
 
+FileRecord = namedtuple("FileRecord", "id, path")
 
 class DB:
     connection: sqlite3.Connection
@@ -74,16 +76,8 @@ class DB:
 
     # Should be called after the download
     @classmethod
-    def add_file(cls, id: int, path: str, cursor: sqlite3.Cursor):
-        if exists(path):
-            with open(path, "rb") as file:
-                hash = crc32(file.read())
-                try:
-                    cursor.execute(FILE_INSERTION_QUERY, (id, path, hash))
-                except Exception as e:
-                    logger.fail(str(e) + "\n The file_path is " + path)
-        else:
-            logger.fail("Given file to add to DB, cannot found in disk.")
+    def add_file(cls, id: int, path: str):
+        cls.to_add.put(FileRecord(id, path))
 
     @classmethod
     def apply_changes_and_close(cls):
@@ -93,3 +87,19 @@ class DB:
     @classmethod
     def get_new_cursor(cls):
         return cls.connection.cursor()
+
+    @classmethod
+    @logger.speed_measure("Veri tabanına yazma", False, False)
+    def write_records(cls):
+        cursor = cls.connection.cursor()
+        while not cls.to_add.empty():
+            record = cls.to_add.get()
+            if exists(record.path):
+                with open(record.path, "rb") as file:
+                    hash = crc32(file.read())
+                    try:
+                        cursor.execute(FILE_INSERTION_QUERY, (record.id, record.path, hash))
+                    except Exception as e:
+                        logger.fail(str(e) + "\n The file_path is " + record.path)
+            else:
+                logger.fail("Given file to add to DB, cannot found in disk.")

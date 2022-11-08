@@ -176,12 +176,12 @@ def _download_file(session, file_url: str, destination_folder: str, cursor):
                     )
             with open(file_full_name, "wb") as bin:
                 bin.write(file_binary)
-            DB.add_file(
-                int(file_url[file_url.find("?g") + 2 :]), file_full_name, cursor
-            )
+            DB.add_file(int(file_url[file_url.find("?g") + 2 :]), file_full_name)
 
         case FILE_STATUS.EXISTS:
             logger.debug("Varolan dosya tekrardan indirilmedi")
+            pass
+
 
 @logger.speed_measure("indirme işlemi", False, True)
 def _download_from_server(session, file_url: str):

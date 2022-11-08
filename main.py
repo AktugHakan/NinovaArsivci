@@ -25,6 +25,8 @@ def main():
     courses = get_course_list()
     start_tasks(courses)
 
+    DB.write_records()
+
 
 # ---Program driving code---
 if __name__ == "__main__":
