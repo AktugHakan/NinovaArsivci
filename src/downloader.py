@@ -172,15 +172,15 @@ def _download_file(session, file_url: str, destination_folder: str, cursor):
                     )
                 else:
                     logger.warning(
-                        "Aynı dosya tekrar indirildi. Bu hatayı geliştiriciye bildirin!"
+                        "Veri tabanına manuel müdahele tespit edildi. Eğer müdahele edilmediyse geliştiriciye bildirin!"
                     )
+                    DB.add_file(int(file_url[file_url.find("?g") + 2 :]), file_full_name)
             with open(file_full_name, "wb") as bin:
                 bin.write(file_binary)
             DB.add_file(int(file_url[file_url.find("?g") + 2 :]), file_full_name)
 
         case FILE_STATUS.EXISTS:
             logger.debug("Varolan dosya tekrardan indirilmedi")
-            pass
 
 
 @logger.speed_measure("indirme işlemi", False, True)

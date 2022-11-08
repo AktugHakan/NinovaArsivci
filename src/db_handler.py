@@ -103,3 +103,9 @@ class DB:
                         logger.fail(str(e) + "\n The file_path is " + record.path)
             else:
                 logger.fail("Given file to add to DB, cannot found in disk.")
+
+        cls.connection.commit()
+        cursor.close()
+        cls.connection.close()
+        
+        
