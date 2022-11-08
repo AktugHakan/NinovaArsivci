@@ -50,7 +50,6 @@ def start_tasks(courses: list[Course]) -> None:
 # Launches a thread for each course in Ninova
 def thread_launcher(courses: list[Course], settings) -> None:
     Config.load_from_tuple(settings)
-    DB.connect(DB.db_path)
     proc_list: list[Thread] = []
     for course in courses:
         session_copy = Config.get_session_copy()
