@@ -1,5 +1,4 @@
 from __future__ import annotations
-from asyncio.log import logger
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -11,6 +10,7 @@ from multiprocessing import Process
 from src.downloader import download_all_in_course
 from src.configuration import Config
 from src.db_handler import DB
+from src import logger
 
 
 def start_tasks(courses: list[Course]) -> None:
@@ -25,7 +25,6 @@ def start_tasks(courses: list[Course]) -> None:
 
     fragment_length = len(courses) // Config.core_count
 
-    logger.debug("Çekirdekler başlatılıyor...")
     for i in range(Config.core_count):
         fragmented_list: list
         if i == Config.core_count - 1:
@@ -41,11 +40,9 @@ def start_tasks(courses: list[Course]) -> None:
         )
         core.start()
         core_list.append(core)
-    logger.debug("Çekirdekler başlatıldı")
 
     for core in core_list:
         core.join()
-
 
 # Launches a thread for each course in Ninova
 def thread_launcher(courses: list[Course], settings) -> None:
@@ -62,3 +59,5 @@ def thread_launcher(courses: list[Course], settings) -> None:
 
     for proc in proc_list:
         proc.join()
+
+    logger.debug("Completed process. Joining...")

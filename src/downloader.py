@@ -32,12 +32,9 @@ def download_all_in_course(session: Session, course: Course) -> None:
 
     try:
         mkdir(subdir_name)
-        logger.debug(f"{subdir_name} klasörü oluşturuldu.")
     except FileExistsError:
-        logger.debug(
-            f"{subdir_name} klasörü oluşturulmadı. Zaten böyle bir klasör var."
-        )
-
+        pass
+    
     if Config.merge:
         raw_html = session.get(
             URL + course.link + SINIF_DOSYALARI_URL_EXTENSION
@@ -77,8 +74,6 @@ def download_all_in_course(session: Session, course: Course) -> None:
 
         for thread in thread_list:
             thread.join()
-    
-    logger.debug("Completed process. Joining...")
 
 
 def _get_mb_file_size_from_string(raw_file_size: str) -> float:
