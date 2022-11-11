@@ -49,6 +49,7 @@ class Config:
         merge: bool,
         first_run: bool,
         core_count: int,
+        verbose: bool
     ):
         cls.debug = debug
         cls.user = user
@@ -56,6 +57,7 @@ class Config:
         cls.merge = merge
         cls.first_run = first_run
         cls.core_count = core_count
+        cls.verbose = verbose
         from src import logger
 
     @classmethod
@@ -73,7 +75,8 @@ class Config:
             cls.first_run,
             cls.core_count,
             DB.to_add,
-            DB.db_path
+            DB.db_path,
+            cls.verbose
         )
 
     @classmethod
@@ -87,6 +90,11 @@ class Config:
         cls.core_count = settings[6]
         DB.to_add = settings[7]
         DB.connect(settings[8])
+        cls.verbose = settings[9]
+        if cls.debug:
+            logger.enable_debug()
+        if cls.verbose:
+            logger.enable_verbose()
 
 
     @classmethod
@@ -161,5 +169,5 @@ class Config:
 
         # Save the changes
         cls.set_initial_attr(
-            debug, user, download_directory, merge, first_run, core_count
+            debug, user, download_directory, merge, first_run, core_count, verbose
         )
