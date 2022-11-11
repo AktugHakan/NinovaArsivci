@@ -145,9 +145,8 @@ def _traverse_folder(session, folder_url, current_folder, new_folder_name):
     subdir_name = join(current_folder, new_folder_name)
     try:
         mkdir(subdir_name)
-        logger.debug(f"{new_folder_name} klasörü oluşturuldu")
     except FileExistsError:
-        logger.debug(f"{subdir_name} klasörü oluşturulmadı, bu klasör zaten var.")
+        pass
 
     folder_thread = Thread(
         target=_download_or_traverse,
