@@ -28,7 +28,8 @@ def warning(message):
 
 
 def verbose(message):
-    print("INFO: " + message)
+    if VERBOSE:
+        print("INFO: " + message)
 
 
 def debug(message):

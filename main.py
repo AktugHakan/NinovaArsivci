@@ -8,7 +8,6 @@ try:
     from src.login import login
     from src.kampus import get_course_list
     from src.task_handler import start_tasks
-    from src.argv_handler import get_args
     from src.db_handler import DB
 except ModuleNotFoundError:
     print(

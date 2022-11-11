@@ -1,6 +1,6 @@
 from collections import namedtuple
 import sqlite3
-from multiprocessing import Queue
+from multiprocessing import Manager, Queue
 from os.path import join, exists
 from enum import Enum
 from zlib import crc32
@@ -25,11 +25,18 @@ FileRecord = namedtuple("FileRecord", "id, path")
 
 class DB:
     connection: sqlite3.Connection
-    to_add: Queue = Queue()
+    # manager = Manager()
+    # try:
+    #     manager.start()
+    # except:
+    #     pass
+    
+    to_add = Queue()
     db_path: str
 
     @classmethod
     def init(cls, base_directory: str, first_run: bool):
+        
         cls.db_path = join(base_directory, DATABASE_FILE_NAME)
         cls.connect(cls.db_path)
         cursor = cls.connection.cursor()

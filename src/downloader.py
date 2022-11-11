@@ -77,6 +77,8 @@ def download_all_in_course(session: Session, course: Course) -> None:
 
         for thread in thread_list:
             thread.join()
+    
+    logger.debug("Completed process. Joining...")
 
 
 def _get_mb_file_size_from_string(raw_file_size: str) -> float:
@@ -180,9 +182,6 @@ def _download_file(session, file_url: str, destination_folder: str, cursor):
                 bin.write(file_binary)
                 
             DB.add_file(int(file_url[file_url.find("?g") + 2 :]), file_full_name)
-
-        case FILE_STATUS.EXISTS:
-            logger.debug("Varolan dosya tekrardan indirilmedi")
 
 
 @logger.speed_measure("indirme işlemi", False, True)

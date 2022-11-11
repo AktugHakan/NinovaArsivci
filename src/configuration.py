@@ -109,9 +109,10 @@ class Config:
 
         # ---Debug Configuration---
         debug = "debug" in config_dict
-        verbose = "verbose" in config_dict or debug
+        verbose = "verbose" in config_dict
         if debug:
             logger.enable_debug()
+
         if verbose:
             logger.enable_verbose()
 
