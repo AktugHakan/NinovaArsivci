@@ -136,9 +136,9 @@ class Config:
         core_count = 2
         if "core" in config_dict:
             try:
-                core_count = int(config_dict["core"])
+                core_count = int(config_dict["core"][0])
             except:
-                logger.warning("Girilen çekirdek (core) sayısı geçerli bir sayı değil.")
+                logger.warning(f"Girilen çekirdek sayısı ( {config_dict['core'][0]} ) geçerli bir sayı değil.")
 
         # ---Directory Configguration---
         if "d" in config_dict:
