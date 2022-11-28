@@ -16,7 +16,7 @@ from src import logger
 
 def start_tasks(courses: list[Course]) -> None:
 
-    if os.name == "nt" or True: # true is debug only
+    if os.name == "nt": # true is debug only
         logger.warning("Windows işletim sistemi tespit edildi. Program tek çekirdek üzerinde çalışacak.")
         thread_launcher(courses, Config.get_settings_tuple())
     else:
