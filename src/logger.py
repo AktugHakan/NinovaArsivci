@@ -18,6 +18,7 @@ def fail(message):
     _FAIL = "\033[91m"
     _ENDC = "\033[0m"
     print("HATA! " + _FAIL + message + _ENDC)
+    exit()
 
 
 def warning(message):
@@ -27,7 +28,8 @@ def warning(message):
 
 
 def verbose(message):
-    print("INFO: " + message)
+    if VERBOSE:
+        print("INFO: " + message)
 
 
 def debug(message):
@@ -42,7 +44,7 @@ def speed_measure(debug_name: str, is_level_debug: bool, return_is_debug_info: b
             return_val = func(*args, **kwargs)
             end = perf_counter()
             
-            additional_info = return_val if return_is_debug_info else ""
+            additional_info = return_val[0] if return_is_debug_info else ""
 
             if is_level_debug:
                 debug(f"{additional_info[:FILE_NAME_MAX_LENGTH]:<30} {debug_name} {end-start} saniyede tamamlandı.")

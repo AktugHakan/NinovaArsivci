@@ -6,14 +6,16 @@ if TYPE_CHECKING:
     from src.kampus import Course
 
 from os import mkdir
-from os.path import join
+from os.path import join, exists
 from src import logger
 from bs4 import BeautifulSoup, element
 from threading import Thread
+from zlib import crc32
 
 from src.configuration import Config
 from src.kampus import Course
 from src.NinovaUrl import URL
+from src.db_handler import DB, FILE_STATUS
 
 MIN_FILE_SIZE_TO_LAUNCH_NEW_THREAD = 5  # in mb
 
@@ -21,6 +23,8 @@ SINIF_DOSYALARI_URL_EXTENSION = "/SinifDosyalari"
 DERS_DOSYALARI_URL_EXTENSION = "/DersDosyalari"
 
 thread_list: list[Thread] = []
+
+
 def download_all_in_course(session: Session, course: Course) -> None:
     global URL
 
@@ -28,12 +32,9 @@ def download_all_in_course(session: Session, course: Course) -> None:
 
     try:
         mkdir(subdir_name)
-        logger.debug(f"{subdir_name} klasörü oluşturuldu.")
     except FileExistsError:
-        logger.debug(
-            f"{subdir_name} klasörü oluşturulmadı. Zaten böyle bir klasör var."
-        )
-
+        pass
+    
     if Config.merge:
         raw_html = session.get(
             URL + course.link + SINIF_DOSYALARI_URL_EXTENSION
@@ -105,12 +106,19 @@ def _download_or_traverse(
             elif file_size > MIN_FILE_SIZE_TO_LAUNCH_NEW_THREAD:  # mb
                 large_file_thread = Thread(
                     target=_download_file,
-                    args=(session, URL + file_link, destionation_folder),
+                    args=(
+                        session,
+                        URL + file_link,
+                        destionation_folder,
+                        DB.get_new_cursor(),
+                    ),
                 )
                 large_file_thread.start()
                 thread_list.append(large_file_thread)
             else:
-                _download_file(session, URL + file_link, destionation_folder)
+                _download_file(
+                    session, URL + file_link, destionation_folder, DB.get_new_cursor()
+                )
 
 
 def _parse_file_info(row: element.Tag):
@@ -132,9 +140,8 @@ def _traverse_folder(session, folder_url, current_folder, new_folder_name):
     subdir_name = join(current_folder, new_folder_name)
     try:
         mkdir(subdir_name)
-        logger.debug(f"{new_folder_name} klasörü oluşturuldu")
     except FileExistsError:
-        logger.debug(f"{subdir_name} klasörü oluşturulmadı, bu klasör zaten var.")
+        pass
 
     folder_thread = Thread(
         target=_download_or_traverse,
@@ -143,12 +150,37 @@ def _traverse_folder(session, folder_url, current_folder, new_folder_name):
     folder_thread.start()
     thread_list.append(folder_thread)
 
+
+def _download_file(session, file_url: str, destination_folder: str, cursor):
+    file_status = DB.check_file_status(int(file_url[file_url.find("?g") + 2 :]), cursor)
+    match file_status:
+        case FILE_STATUS.NEW:
+            file_name, file_binary = _download_from_server(session, file_url)
+            file_full_name = join(destination_folder, file_name)
+            while exists(file_full_name):
+                ex_file = open(file_full_name, "rb")
+                if crc32(file_binary) != crc32(ex_file.read()):
+                    extension_dot_index = file_full_name.find(".")
+                    file_full_name = (
+                        file_full_name[:extension_dot_index]
+                        + "_new"
+                        + file_full_name[extension_dot_index:]
+                    )
+                else:
+                    logger.warning(
+                        "Veri tabanına manuel müdahele tespit edildi. Eğer müdahele edilmediyse geliştiriciye bildirin!"
+                    )
+                    break
+
+            with open(file_full_name, "wb") as bin:
+                bin.write(file_binary)
+                
+            DB.add_file(int(file_url[file_url.find("?g") + 2 :]), file_full_name)
+
+
 @logger.speed_measure("indirme işlemi", False, True)
-def _download_file(session, file_url, destination_folder):
+def _download_from_server(session, file_url: str):
     resp = session.get(file_url)
     file_name_offset = resp.headers["content-disposition"].index("filename=") + 9
     file_name = resp.headers["content-disposition"][file_name_offset:]
-    with open(destination_folder + "/" + file_name, "wb") as bin:
-        bin.write(resp.content)
-
-    return file_name
+    return file_name, resp.content

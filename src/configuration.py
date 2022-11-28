@@ -17,6 +17,7 @@ try:
     from src.argv_handler import get_args
     from src.classes import User
     from src import logger
+    from src.db_handler import DATABASE_FILE_NAME, DB
 except ModuleNotFoundError:
     print(
         "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
@@ -30,6 +31,7 @@ class Config:
     Use class functions and static variables instead
     Initialize with init_config method
     """
+
     debug: bool
     user: User
     base_path: str
@@ -47,6 +49,7 @@ class Config:
         merge: bool,
         first_run: bool,
         core_count: int,
+        verbose: bool
     ):
         cls.debug = debug
         cls.user = user
@@ -54,6 +57,7 @@ class Config:
         cls.merge = merge
         cls.first_run = first_run
         cls.core_count = core_count
+        cls.verbose = verbose
         from src import logger
 
     @classmethod
@@ -62,7 +66,18 @@ class Config:
 
     @classmethod
     def get_settings_tuple(cls):
-        return (cls.debug, cls.user, cls.base_path, cls.session, cls.merge, cls.first_run, cls.core_count)
+        return (
+            cls.debug,
+            cls.user,
+            cls.base_path,
+            cls.session,
+            cls.merge,
+            cls.first_run,
+            cls.core_count,
+            DB.to_add,
+            DB.db_path,
+            cls.verbose
+        )
 
     @classmethod
     def load_from_tuple(cls, settings: tuple):
@@ -73,8 +88,13 @@ class Config:
         cls.merge = settings[4]
         cls.first_run = settings[5]
         cls.core_count = settings[6]
-
-
+        DB.to_add = settings[7]
+        DB.connect(settings[8])
+        cls.verbose = settings[9]
+        if cls.debug:
+            logger.enable_debug()
+        if cls.verbose:
+            logger.enable_verbose()
 
 
     @classmethod
@@ -86,7 +106,7 @@ class Config:
         return cls.__dict__
 
     @classmethod
-    def init_config(cls):
+    def init(cls):
         """
         First thing to run. Get config info from various sources
 
@@ -97,9 +117,10 @@ class Config:
 
         # ---Debug Configuration---
         debug = "debug" in config_dict
-        verbose = "verbose" in config_dict or debug
+        verbose = "verbose" in config_dict
         if debug:
             logger.enable_debug()
+
         if verbose:
             logger.enable_verbose()
 
@@ -115,9 +136,9 @@ class Config:
         core_count = 2
         if "core" in config_dict:
             try:
-                core_count = int(config_dict["core"])
+                core_count = int(config_dict["core"][0])
             except:
-                logger.warning("Girilen çekirdek (core) sayısı geçerli bir sayı değil.")
+                logger.warning(f"Girilen çekirdek sayısı ( {config_dict['core'][0]} ) geçerli bir sayı değil.")
 
         # ---Directory Configguration---
         if "d" in config_dict:
@@ -134,7 +155,8 @@ class Config:
             exit()
 
         # ---First Run Detection---
-        first_run = not exists(join(download_directory, "files.db"))
+        first_run = not exists(join(download_directory, DATABASE_FILE_NAME))
+
         if first_run:
             merge = messagebox.askyesno(
                 "Klasörleri Birleştir",
@@ -142,9 +164,10 @@ class Config:
                 icon="question",
             )
         else:
-            pass  # get "merge" from db
+            # TEMPORARY SOLUTION!!!
+            merge = False  # get "merge" from db
 
         # Save the changes
         cls.set_initial_attr(
-            debug, user, download_directory, merge, first_run, core_count
+            debug, user, download_directory, merge, first_run, core_count, verbose
         )

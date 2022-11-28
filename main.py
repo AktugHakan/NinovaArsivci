@@ -8,10 +8,10 @@ try:
     from src.login import login
     from src.kampus import get_course_list
     from src.task_handler import start_tasks
-    from src.argv_handler import get_args
+    from src.db_handler import DB
 except ModuleNotFoundError:
     print(
-        "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
+        "HATA! Kütphaneler yüklenemedi. 'src' klasörü silinmiş veya yeri değişmiş olabilir."
     )
     exit()
 
@@ -20,12 +20,16 @@ except ModuleNotFoundError:
 def main():
     session = login(Config.user)
     Config.set_session(session)
+
     courses = get_course_list()
     start_tasks(courses)
+
+    DB.write_records()
 
 
 # ---Program driving code---
 if __name__ == "__main__":
-    # Get username from command line, else prompt
-    Config.init_config()
+    # Config.init should be called before main, since main uses user info in the config
+    Config.init()
+    DB.init(Config.base_path, Config.first_run)
     main()
