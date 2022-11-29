@@ -1,10 +1,14 @@
-# Ninova Arşivci v2.1
+# Ninova Arşivci v3 BETA
 
-Ninova Arşivci, [Ninova](https://ninova.itu.edu.tr/)'daki dosyaları topluca indirmek için yazılmış bir Python programıdır.
+Ninova Arşivci, [Ninova](https://ninova.itu.edu.tr/)'daki dosyaları topluca indirmek için yazılmış bir Python programıdır.  
 (Ninova: İstanbul Teknik Üniversitesinin e-öğrenim merkezi)
 
-## v2 Yeni Özellikler
-* Birden fazla iş parçacığı ve süreç ile paralelleştirilmiş indirme işlemi, önceki sürüme göre **3 kat** daha hızlı.
+## v3 BETA Yeni Özellikler
+* Artık dosya kayıtları bir veri tabanında tutuluyor. Bu sayede aynı dosyaların tekrar indirilmesinin önüne geçildi.
+* Çoklu süreç sistemi, hıza katkısı olmadığı için kaldırıldı. Kod tabanı, tek çekirdekte çalışmak üzere optimize edildi.
+* "-core" komut satırı parametresi kaldırıldı. Program tek çekirdek üzerinde çalışıyor.
+* v3 sürümü v2 ile indirilmiş klasörlerde uyumlu çalışır. İndirme klasörünü v3'e yükseltmek için yeni sürümü indirin ve klasör üzerinde indirme işlemi yapın.
+* Hatalı şifre girildiğinde programı kapatmak yerine tekrar soruyor.
 
 ## Kurulum
 Bu program [Python yorumlayıcısı (interpreter)](https://www.python.org/downloads/) gerektirir.
@@ -45,15 +49,9 @@ Debug ve verbose bilgisini etkinleştirir. Verbose hangi işlemin kaç saniye s�
 python main.py -verbose
 ```
 
-4. "-core cekirdek_sayisi"
-Bilgisayarınızda aynı anda kaç çekirdek ile işlem yapılacağını belirtir. Varsayılan değeri 2'dir. Çok fazla seçildiği taktirde program, otomatik olarak çekirdek sayısını düşürür.
-```bash
-python main.py -core 4
-```
-
 Komutların bir arada kullanımına örnek:
 ```bash
-python main.py -u Bee20 passwd -debug -core 5
+python main.py -u Bee20 passwd -debug -verbose
 ```
 
 ## S.S.S.
@@ -64,19 +62,22 @@ python main.py -u Bee20 passwd -debug -core 5
   Terminalin açıldığı klasör, main.py ile klasör olmalı.
 
 3. Şifremi giriyorum ama çalar mısın?  
-  Hayır.
+  ...
 
 4. İndirme klasörünü "-d" komutu ile komut satırı üzerinden verdiğim halde klasör seçme penceresi açılıyor.  
-  Parametre olarak verdiğin yolu kontrol et.
+  Parametre olarak verdiğin yolu kontrol et. Eğer yol geçerli değilse, kullanıcıya sorar
+  
+5. "Veri tabanına manuel müdahele tespit edildi!" hatası alıyorum. Ama ben veri tabanını değiştirmedim
+  Eğer önceki indirme yarıda kesilmişse, veri tabanı bozulabilir. Bu hata önemli değildir ve program akışını etkilemez. Dosyalar indirilir.
 
 
 
 ## Notlar
-* Eğer indirme klasöründe indirilen dosya ile aynı isimde bir dosya varsa üstüne yazılır.
+* Eğer indirme klasöründe indirilen dosya ile aynı isimde farklı içerikte bir dosya varsa sonuna "_new" eklenerek kaydedilir.
 * İndirdiğiniz dosyaları değiştirseniz de programı çalıştırdığınızda Ninova'daki halleri indirilir ve üstüne yazılır.
-* Program her çalıştırıldığında tüm dosyalar tekrar indirilir.
-* Programın tamamlanması süresi 3-4 dakika sürebilir.
-* Detaylı bilgileri görmek için src/logger.py dosyasındaki "DEBUG = False" satırını "DEBUG = True" ile değiştirin.
+* Program çalıştırdığınızda yalnızca varolmayan dosyalar indirilir.
+* Programın tamamlanması süresi 2-3 dakika sürebilir.
+* Detaylı bilgileri görmek için programı çalıştırırken "-debug" ve "-verbose" parametrelerini ekleyin
 
 ## Deneysel Özellikleri Test Edin
 Eğer yeni özellikleri önceden keşfetmek ve programı geliştirmeme yardımcı olmak isterseniz sol üst köşede, üstünde "main" yazan butona tıklayın ve mevcut dalı Nightly ile değiştirin. Daha sonra normal kurulum adımlarını takip edin.
