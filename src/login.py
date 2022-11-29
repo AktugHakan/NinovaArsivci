@@ -1,6 +1,4 @@
 from src import logger
-from src.globals import URL
-from time import perf_counter
 
 try:
     from bs4 import BeautifulSoup
@@ -9,7 +7,8 @@ except ModuleNotFoundError:
     logger.fail(
         "Gerekli kütüphaneler eksik. Yüklemek için 'pip install -r requirements.txt' komutunu çalıştırın."
     )
-    exit()
+
+URL = "https://ninova.itu.edu.tr"
 
 
 def check_connection() -> bool:
@@ -23,7 +22,7 @@ def check_connection() -> bool:
 
 def login(user_secure_info: tuple) -> requests.Session:
     global URL
-    URL = URL + "/Kampus1"
+    _URL = URL + "/Kampus1"
     HEADERS = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
         "Accept-Encoding": "gzip, deflate, br",
@@ -36,15 +35,13 @@ def login(user_secure_info: tuple) -> requests.Session:
     # Requesting and parsing the page
     session = requests.Session()
     try:
-        page = session.get(URL, headers=HEADERS)
+        page = session.get(_URL, headers=HEADERS)
     except:
         logger.warning("Ninova sunucusuna bağlanılamadı.")
         if check_connection():
             logger.fail("Internet var ancak Ninova'ya bağlanılamıyor.")
-            exit()
         else:
             logger.fail("Internete erişim yok. Bağlantınızı kontrol edin.")
-            exit()
 
     page = BeautifulSoup(page.content, "lxml")
 

@@ -18,10 +18,7 @@ except ModuleNotFoundError:
 # ---MAIN---
 @logger.speed_measure("Program", False)
 def main():
-    globals.init_globals()
-    DB.init(gl) # from here
-    session = login(Config.user)
-    Config.set_session(session)
+    DB.init()
 
     courses = get_course_list()
     start_tasks(courses)
@@ -31,5 +28,5 @@ def main():
 
 # ---Program driving code---
 if __name__ == "__main__":
-
+    globals.init_globals()
     main()

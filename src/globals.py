@@ -6,35 +6,38 @@ try:
     from pwinput import pwinput as getpass
 except:
     from getpass import getpass
+import copy
 
 from src import logger
 from src.argv_handler import get_args
 from src.login import login
 
-if TYPE_CHECKING:
-    from requests import Session
 
 BASE_PATH: str = None
 FIRST_RUN: bool = None
-SESSION: Session = None
+SESSION = None
 ARGV: dict = None
 
 
 def init_globals():
     global BASE_PATH, FIRST_RUN, SESSION, ARGV
-    ARGV = get_argv_dict()
-    BASE_PATH = get_directory()
-    FIRST_RUN = get_first_run()
-    SESSION = get_session()
+    ARGV = _get_argv_dict()
+    logger.DEBUG, logger.VERBOSE = _get_debug_verbose()
+    BASE_PATH = _get_directory()
+    FIRST_RUN = _get_first_run()
+    SESSION = _get_session()
 
 
-def get_argv_dict():
+def _get_argv_dict():
     """
     Returns command line arguments as python dict
     """
     return get_args(d=1, u=2, debug=0, verbose=0)
 
-def get_directory():
+def _get_debug_verbose():
+    return ("debug" in ARGV, "verbose" in ARGV)
+
+def _get_directory():
     """
     Gets the directory from command line if exists, else shows a folder dialog\n
     Guarantees that the returned path exists, if the path does not exists than exits with error\n
@@ -47,8 +50,7 @@ def get_directory():
         default_dir = default_dir_file.read().strip()
     except:
         default_dir = getcwd()
-    finally:
-        default_dir_file.close()
+
 
     if "d" in ARGV:
         if exists(ARGV["d"][0]):
@@ -77,7 +79,7 @@ def get_directory():
 
     return download_directory
 
-def get_first_run():
+def _get_first_run():
     """
     Checks whether this is the first time that program ran on selected directory by checking database file
     """
@@ -87,7 +89,7 @@ def get_first_run():
     else:
         logger.fail("Klasör seçilmemiş. get_directory() fonksiyonu ile BASE_PATH değişkeni ayarlanmalı!")
 
-def get_session():
+def _get_session():
     """
     Gets username and password from commandline if exists, else prompts user\n
     Eğer kullanıcı adı veya şifre yanlış se
@@ -109,3 +111,6 @@ def get_session():
                 pass
             logger.warning("Kullanıcı adı veya şifre hatalı. Tekrar deneyin.")
 
+
+def session_copy():
+    return copy.copy(SESSION)
