@@ -5,7 +5,7 @@ from collections import namedtuple
 from bs4 import BeautifulSoup
 
 from src.configuration import Config
-from src.NinovaUrl import URL
+from src.globals import URL
 
 Course = namedtuple("Course", "code name link")
 COURSE_TITLE_OFFSET = 8

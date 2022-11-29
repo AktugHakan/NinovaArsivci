@@ -37,7 +37,7 @@ class DB:
     @classmethod
     def init(cls, base_directory: str, first_run: bool):
         
-        cls.db_path = join(base_directory, DATABASE_FILE_NAME)
+        cls.db_path = join(, DATABASE_FILE_NAME)
         cls.connect(cls.db_path)
         cursor = cls.connection.cursor()
         if first_run:

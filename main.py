@@ -3,12 +3,12 @@
 
 # ---IMPORTS---
 try:
-    from src.configuration import Config
     from src import logger
     from src.login import login
     from src.kampus import get_course_list
     from src.task_handler import start_tasks
     from src.db_handler import DB
+    from src import globals
 except ModuleNotFoundError:
     print(
         "HATA! Kütphaneler yüklenemedi. 'src' klasörü silinmiş veya yeri değişmiş olabilir."
@@ -18,6 +18,8 @@ except ModuleNotFoundError:
 # ---MAIN---
 @logger.speed_measure("Program", False)
 def main():
+    globals.init_globals()
+    DB.init(gl) # from here
     session = login(Config.user)
     Config.set_session(session)
 
@@ -29,7 +31,5 @@ def main():
 
 # ---Program driving code---
 if __name__ == "__main__":
-    # Config.init should be called before main, since main uses user info in the config
-    Config.init()
-    DB.init(Config.base_path, Config.first_run)
+
     main()

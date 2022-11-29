@@ -1,6 +1,5 @@
-from src.classes import User
 from src import logger
-from src.NinovaUrl import URL
+from src.globals import URL
 from time import perf_counter
 
 try:
@@ -22,7 +21,7 @@ def check_connection() -> bool:
         return False
 
 
-def login(user_secure_info: User) -> requests.Session:
+def login(user_secure_info: tuple) -> requests.Session:
     global URL
     URL = URL + "/Kampus1"
     HEADERS = {
@@ -52,15 +51,14 @@ def login(user_secure_info: User) -> requests.Session:
     post_data = dict()
     for field in page.find_all("input"):
         post_data[field.get("name")] = field.get("value")
-    post_data["ctl00$ContentPlaceHolder1$tbUserName"] = user_secure_info.username
-    post_data["ctl00$ContentPlaceHolder1$tbPassword"] = user_secure_info.password
+    post_data["ctl00$ContentPlaceHolder1$tbUserName"] = user_secure_info[0]
+    post_data["ctl00$ContentPlaceHolder1$tbPassword"] = user_secure_info[1]
 
     page = _login_request(session, post_data, page)
 
     page = BeautifulSoup(page.content, "lxml")
     if page.find(id="ctl00_Header1_tdLogout") is None:
-        logger.fail("Giriş yapılamadı!")
-        exit()
+        raise PermissionError("Kullanıcı adı veya şifre yanlış!")
     return session
 
 @logger.speed_measure("Giriş yapma", False, False)

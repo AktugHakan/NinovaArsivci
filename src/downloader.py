@@ -14,7 +14,7 @@ from zlib import crc32
 
 from src.configuration import Config
 from src.kampus import Course
-from src.NinovaUrl import URL
+from src.globals import URL
 from src.db_handler import DB, FILE_STATUS
 
 MIN_FILE_SIZE_TO_LAUNCH_NEW_THREAD = 5  # in mb
