@@ -4,11 +4,13 @@ Ninova Arşivci, [Ninova](https://ninova.itu.edu.tr/)'daki dosyaları topluca in
 (Ninova: İstanbul Teknik Üniversitesinin e-öğrenim merkezi)
 
 ## v3 BETA Yeni Özellikler
+* İndirilen yeni dosyalar, program sonunda ekrana yazdırılıyor.
 * Artık dosya kayıtları bir veri tabanında tutuluyor. Bu sayede aynı dosyaların tekrar indirilmesinin önüne geçildi.
 * Çoklu süreç sistemi, hıza katkısı olmadığı için kaldırıldı. Kod tabanı, tek çekirdekte çalışmak üzere optimize edildi.
 * "-core" komut satırı parametresi kaldırıldı. Program tek çekirdek üzerinde çalışıyor.
 * v3 sürümü v2 ile indirilmiş klasörlerde uyumlu çalışır. İndirme klasörünü v3'e yükseltmek için yeni sürümü indirin ve klasör üzerinde indirme işlemi yapın.
 * Hatalı şifre girildiğinde programı kapatmak yerine tekrar soruyor.
+* Klasör seçme penceresi, son seçilen klasörü hatırlıyor.
 
 ## Kurulum
 Bu program [Python yorumlayıcısı (interpreter)](https://www.python.org/downloads/) gerektirir.

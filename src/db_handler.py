@@ -108,6 +108,7 @@ class DB:
                         cursor.execute(FILE_INSERTION_QUERY, (record.id, record.path, hash))
                     except Exception as e:
                         logger.fail(str(e) + "\n The file_path is " + record.path)
+                logger.new_file(record.path)
             else:
                 logger.warning(f"Veritabanına yazılacak {record.path} dosyası bulunamadı. Veri tabanına yazılmayacak")
 
