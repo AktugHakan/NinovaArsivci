@@ -1,11 +1,12 @@
 from collections import namedtuple
 import sqlite3
-from multiprocessing import Manager, Queue
 from os.path import join, exists
 from enum import Enum
 from zlib import crc32
+from queue import Queue
 
 from src import logger
+from src import globals
 
 DATABASE_FILE_NAME = "ninova_arsivci.db"
 TABLE_CREATION_QUERY = "CREATE TABLE files (id INTEGER PRIMARY KEY, path TEXT UNIQUE, hash INT, isDeleted INT DEFAULT 0);"
@@ -25,39 +26,38 @@ FileRecord = namedtuple("FileRecord", "id, path")
 
 class DB:
     connection: sqlite3.Connection
-    # manager = Manager()
-    # try:
-    #     manager.start()
-    # except:
-    #     pass
-    
     to_add = Queue()
     db_path: str
 
     @classmethod
-    def init(cls, base_directory: str, first_run: bool):
-        
-        cls.db_path = join(base_directory, DATABASE_FILE_NAME)
-        cls.connect(cls.db_path)
+    def init(cls):
+        """
+        Connects to DB and checks and creates the table structure
+        """
+        cls.db_path = join(globals.BASE_PATH, DATABASE_FILE_NAME)
+        cls.connect()
         cursor = cls.connection.cursor()
-        if first_run:
+        if globals.FIRST_RUN:
             cursor.execute(TABLE_CREATION_QUERY)
             logger.verbose("Veri tabanı ilk çalıştırma için hazırlandı.")
         else:
             cursor.execute(TABLE_CHECK_QUERY)
             if cursor.fetchone()[0] != "files":
                 logger.fail(
-                    "Veri tabanı bozulmuş. 'ninova_arsivci.db' dosyasını silip tekrar başlatın. Silme işlemi sonrasında tüm dosyalar yeniden indirilir."
+                    f"Veri tabanı bozuk. '{DATABASE_FILE_NAME}' dosyasını silip tekrar başlatın. Silme işlemi sonrasında tüm dosyalar yeniden indirilir."
                 )
 
         cursor.close()
 
     @classmethod
-    def connect(cls, db_path):
+    def connect(cls):
+        """
+        Connects to DB using db_path class attribute
+        Sets connection object of the class, does not return anything
+        """
         try:
-            cls.connection = sqlite3.connect(db_path, check_same_thread=False)
-
-            logger.debug("Veri tabanına bağlanıldı.")
+            cls.connection = sqlite3.connect(cls.db_path, check_same_thread=False)
+            logger.debug("Veri tabanına bağlandı.")
         except:
             logger.fail("Veri tabanına bağlanılamadı.")
 
@@ -71,7 +71,7 @@ class DB:
             deleted, id = file
             if file_id != id:
                 logger.fail(
-                    "Eş zamanlı erişim, race condition oluşturdu. Veri tabanından gelen bilgi, bu dosyaya ait değil."
+                    "Eş zamanlı erişimden dolayı, race condition oluşturdu. Veri tabanından gelen bilgi, bu dosyaya ait değil. Geliştiriciye bildirin."
                 )
 
             if deleted:
@@ -98,7 +98,7 @@ class DB:
     @classmethod
     @logger.speed_measure("Veri tabanına yazma", False, False)
     def write_records(cls):
-        cursor = cls.connection.cursor()
+        cursor = cls.get_new_cursor()
         while not cls.to_add.empty():
             record = cls.to_add.get()
             if exists(record.path):
@@ -109,10 +109,8 @@ class DB:
                     except Exception as e:
                         logger.fail(str(e) + "\n The file_path is " + record.path)
             else:
-                logger.fail("Given file to add to DB, cannot found in disk.")
+                logger.warning(f"Veritabanına yazılacak {record.path} dosyası bulunamadı. Veri tabanına yazılmayacak")
 
-        cls.connection.commit()
-        cursor.close()
-        cls.connection.close()
+        cls.apply_changes_and_close()
         
         
