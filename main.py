@@ -24,6 +24,8 @@ def main():
     start_tasks(courses)
 
     DB.write_records()
+    
+    input("Press a key to close the terminal.") # To prevent the terminal from closing automatically when you open the program with a .bat file
 
 
 # ---Program driving code---
