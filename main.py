@@ -9,9 +9,9 @@ try:
     from src.kampus import get_course_list
     from src.task_handler import start_tasks
     from src.argv_handler import get_args
-except ModuleNotFoundError:
+except ModuleNotFoundError as e:
     print(
-        "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin."
+        "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin." + e.msg
     )
     exit()
 
