@@ -3,30 +3,32 @@
 
 # ---IMPORTS---
 try:
-    from src.configuration import Config
     from src import logger
     from src.login import login
     from src.kampus import get_course_list, filter_courses
     from src.task_handler import start_tasks
-    from src.argv_handler import get_args
-except ModuleNotFoundError as e:
+    from src.db_handler import DB
+    from src import globals
+except ModuleNotFoundError:
     print(
-        "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin." + e.msg
+        "HATA! Kütphaneler yüklenemedi. 'src' klasörü silinmiş veya yeri değişmiş olabilir."
+
     )
     exit()
 
 # ---MAIN---
 @logger.speed_measure("Program", False)
 def main():
-    session = login(Config.user)
-    Config.set_session(session)
+    DB.init()
+
     courses = get_course_list()
     courses = filter_courses(courses)
     start_tasks(courses)
 
+    DB.write_records()
+
 
 # ---Program driving code---
 if __name__ == "__main__":
-    # Get username from command line, else prompt
-    Config.init_config()
+    globals.init_globals()
     main()

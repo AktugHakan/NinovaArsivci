@@ -4,9 +4,8 @@ from typing import TYPE_CHECKING
 from collections import namedtuple
 from bs4 import BeautifulSoup
 
-from src.configuration import Config
-from src.NinovaUrl import URL
-from src import logger
+from src import globals
+from src.login import URL
 
 Course = namedtuple("Course", "code name link")
 COURSE_TITLE_OFFSET = 8
@@ -17,7 +16,7 @@ def get_course_list() -> tuple[Course]:
     global URL
     course_list = []
 
-    session = Config.session
+    session = globals.SESSION
 
     page = BeautifulSoup(session.get(URL + "/Kampus1").content.decode("utf-8"), "lxml")
 
