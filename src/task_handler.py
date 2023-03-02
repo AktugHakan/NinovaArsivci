@@ -8,8 +8,6 @@ from threading import Thread
 
 from src.downloader import download_all_in_course
 
-
-
 def start_tasks(courses: list[Course]) -> None:
     proc_list: list[Thread] = []
     for course in courses:
