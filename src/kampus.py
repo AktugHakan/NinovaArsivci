@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 from src import globals
 from src.login import URL
+from src import logger
 
 Course = namedtuple("Course", "code name link")
 COURSE_TITLE_OFFSET = 8
@@ -64,8 +65,8 @@ Tüm dersleri indirmek için boş bırakın ve enter'a basın
         indirilecek_dersler = ""
         for course in courses_filtered:
             indirilecek_dersler += course.name + ", "
-        logger.verbose(f"{indirilecek_dersler} dersleri indirilecek.")
+        print(f"{indirilecek_dersler} dersleri indirilecek.")
         return courses_filtered
     else:
-        logger.verbose("Tüm dersler indirilecek.")
+        print("Tüm dersler indirilecek.")
         return courses

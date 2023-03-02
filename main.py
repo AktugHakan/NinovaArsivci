@@ -20,7 +20,6 @@ except ModuleNotFoundError:
 @logger.speed_measure("Program", False)
 def main():
     DB.init()
-
     courses = get_course_list()
     courses = filter_courses(courses)
     start_tasks(courses)
