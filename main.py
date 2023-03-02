@@ -12,6 +12,7 @@ try:
 except ModuleNotFoundError:
     print(
         "HATA! Kütphaneler yüklenemedi. 'src' klasörü silinmiş veya yeri değişmiş olabilir."
+
     )
     exit()
 
