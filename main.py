@@ -6,7 +6,7 @@ try:
     from src.configuration import Config
     from src import logger
     from src.login import login
-    from src.kampus import get_course_list
+    from src.kampus import get_course_list, filter_courses
     from src.task_handler import start_tasks
     from src.argv_handler import get_args
 except ModuleNotFoundError as e:
@@ -21,6 +21,7 @@ def main():
     session = login(Config.user)
     Config.set_session(session)
     courses = get_course_list()
+    courses = filter_courses(courses)
     start_tasks(courses)
 
 

@@ -12,7 +12,7 @@ from src.downloader import download_all_in_course
 from src.configuration import Config
 
 
-def start_tasks(courses: list[Course]) -> None:
+def start_tasks(courses: tuple[Course]) -> None:
 
     if Config.core_count > len(courses):
         Config.core_count = len(courses)
@@ -33,7 +33,6 @@ def start_tasks(courses: list[Course]) -> None:
             fragmented_list = courses[fragment_length * i : fragment_length * (i + 1)]
 
         settings = Config.get_settings_tuple()
-        priiittt = Config.get_settings_dict()
 
         core = Process(
             target=thread_launcher,
