@@ -1,6 +1,7 @@
 from collections import namedtuple
 import sqlite3
 from os.path import join, exists
+from os import remove as delete_file
 from enum import Enum
 from zlib import crc32
 from queue import Queue
@@ -33,8 +34,14 @@ class DB:
     def init(cls):
         """
         Connects to DB and checks and creates the table structure
+        If FIRST_RUN flag is checked and there is a DB file, it means that force download is active
         """
         cls.db_path = join(globals.BASE_PATH, DATABASE_FILE_NAME)
+        if globals.FIRST_RUN:
+            try:
+                delete_file(cls.db_path)
+            except:
+                pass
         cls.connect()
         cursor = cls.connection.cursor()
         if globals.FIRST_RUN:

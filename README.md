@@ -1,7 +1,11 @@
-# Ninova Arşivci v3 BETA
+# Ninova Arşivci v3.5 BETA
 
 Ninova Arşivci, [Ninova](https://ninova.itu.edu.tr/)'daki dosyaları topluca indirmek için yazılmış bir Python programıdır.  
 (Ninova: İstanbul Teknik Üniversitesinin e-öğrenim merkezi)
+
+## v3.5 Deneysel Özellikler
+* Artık hangi derslerin indirilebileceğini seçebilirsiniz. Kullanıcı adınız ve şifrenizi yazdıktan sonra hangi kursları indirmek istediğiniz sorulacaktır.
+* Daha açıklayıcı hata ve bilgilendirme mesajları eklendi
 
 ## v3 Yeni Özellikler
 * İndirilen yeni dosyalar, program sonunda ekrana yazdırılıyor.
@@ -15,7 +19,7 @@ Ninova Arşivci, [Ninova](https://ninova.itu.edu.tr/)'daki dosyaları topluca in
 ## Kurulum
 Bu program [Python yorumlayıcısı (interpreter)](https://www.python.org/downloads/) gerektirir.
 1. Üst sağ köşedeki yeşil "Code" butonuna tıklayın ve zip olarak indirin
-2. NinovaArsivci-main klasörünü zipten çıkarın.
+2. NinovaArsivci-Nightly klasörünü zipten çıkarın.
 3. Çıkarttığınız klasöre girin ve aşağıdaki komutu yazın. Bu komut gerekli kütüphaneleri yükleyecektir.
 ```bash
 pip install -r requirements.txt
@@ -58,19 +62,29 @@ python main.py -u Bee20 passwd -debug -verbose
 
 ## S.S.S.
 1. "HATA! src klasörü bulunamadı veya yeri değiştirilmiş. Programı yeniden indirin." diye bir hata alıyorum.  
-  Programı arşivden çıkarırken src klasörünü de çıkarmalısın. "main.py" dosyası src klasörü içindeki dosyalarla birlikte çalışır.
+  Programı arşivden çıkarırken src klasörünü de çıkarmalısın. "main.py" dosyası src klasörü içindeki dosyalarla birlikte çalışır.  
+  Eğer hata devam ediyorsa, issues kısmından bana bildir.
 
 2. "No such file or directory" hatası alıyorum.  
-  Terminalin açıldığı klasör, main.py ile klasör olmalı.
+  Terminalin açıldığı klasör, main.py ile aynı klasör olmalı.
 
-3. Şifremi giriyorum ama çalar mısın?  
-  ...
+3. Şifreleri topluyor musun? Şifrem güvende mi?  
+  Şifreler tamamen yerelde kalıyor ve Ninova'ya giriş yaptıktan sonra siliniyor.
 
 4. İndirme klasörünü "-d" komutu ile komut satırı üzerinden verdiğim halde klasör seçme penceresi açılıyor.  
   Parametre olarak verdiğin yolu kontrol et. Eğer yol geçerli değilse, kullanıcıya sorar
   
-5. "Veri tabanına manuel müdahele tespit edildi!" hatası alıyorum. Ama ben veri tabanını değiştirmedim
+5. İndirme klasörünü "-d" komutu ile komut satırı üzerinden verdiğim halde klasör seçme penceresi açılıyor.  
+  Parametre olarak verdiğin yolu kontrol et. Eğer yol geçerli değilse, kullanıcıya sorar
+  
+6. "Veri tabanına manuel müdahele tespit edildi!" hatası alıyorum. Ama ben veri tabanını değiştirmedim  
   Eğer önceki indirme yarıda kesilmişse, veri tabanı bozulabilir. Bu hata önemli değildir ve program akışını etkilemez. Dosyalar indirilir.
+  
+7. Klasörler oluşturuluyor ama dosyalar indirilmiyor.  
+  Daha önce indirdiğin bir dosyayı silersen, tekrar indirilmez. Bu sorunu tüm dosyaları tekrardan indirerek çözebilirsin. Bunun için komut satırında çalıştırırken -f komutunu da ekle:  
+  ```bash
+  python main.py -f
+  ```
 
 
 
@@ -80,9 +94,6 @@ python main.py -u Bee20 passwd -debug -verbose
 * Program çalıştırdığınızda yalnızca varolmayan dosyalar indirilir.
 * Programın tamamlanması süresi 2-3 dakika sürebilir.
 * Detaylı bilgileri görmek için programı çalıştırırken "-debug" ve "-verbose" parametrelerini ekleyin
-
-## Deneysel Özellikleri Test Edin
-Eğer yeni özellikleri önceden keşfetmek ve programı geliştirmeme yardımcı olmak isterseniz sol üst köşede, üstünde "main" yazan butona tıklayın ve mevcut dalı Nightly ile değiştirin. Daha sonra normal kurulum adımlarını takip edin.
 
 ## Hata bildirimi
 Programın github sayfasındaki "issues" sekmesi altından, aldığınız hataları veya önerilerinizi yazabilirsiniz.

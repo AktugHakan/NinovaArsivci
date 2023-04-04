@@ -5,7 +5,7 @@
 try:
     from src import logger
     from src.login import login
-    from src.kampus import get_course_list
+    from src.kampus import get_course_list, filter_courses
     from src.task_handler import start_tasks
     from src.db_handler import DB
     from src import globals
@@ -20,8 +20,8 @@ except ModuleNotFoundError:
 @logger.speed_measure("Program", False)
 def main():
     DB.init()
-
     courses = get_course_list()
+    courses = filter_courses(courses)
     start_tasks(courses)
 
     DB.write_records()

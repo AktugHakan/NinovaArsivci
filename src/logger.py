@@ -2,9 +2,9 @@
 
 from time import perf_counter
 
-DEBUG = False
-VERBOSE = False
-FILE_NAME_MAX_LENGTH = 30
+_DEBUG = False
+_VERBOSE = False
+_FILE_NAME_MAX_LENGTH = 30
 
 _FAIL = "\033[91m"
 _ENDC = "\033[0m"
@@ -12,24 +12,23 @@ _WARNING = "\033[93m"
 _GREEN = '\033[92m'
 
 def enable_debug():
-    global DEBUG
-    DEBUG = True
+    global _DEBUG
+    _DEBUG = True
 
 def enable_verbose():
-    global VERBOSE
-    VERBOSE = True
+    global _VERBOSE
+    _VERBOSE = True
 
 def fail(message):
     print("HATA! " + _FAIL + message + _ENDC)
     exit()
-
 
 def warning(message):
     print("UYARI!" + _WARNING + message + _ENDC)
 
 
 def verbose(message):
-    if VERBOSE:
+    if _VERBOSE:
         print("INFO: " + message)
 
 def new_file(file_path):
@@ -37,7 +36,7 @@ def new_file(file_path):
 
 
 def debug(message):
-    if DEBUG:
+    if _DEBUG:
         print("UUT:  " + message)
 
 
@@ -51,9 +50,9 @@ def speed_measure(debug_name: str, is_level_debug: bool, return_is_debug_info: b
             additional_info = return_val[0] if return_is_debug_info else ""
 
             if is_level_debug:
-                debug(f"{additional_info[:FILE_NAME_MAX_LENGTH]:<30} {debug_name} {end-start} saniyede tamamlandı.")
+                debug(f"{additional_info[:_FILE_NAME_MAX_LENGTH]:<30} {debug_name} {end-start} saniyede tamamlandı.")
             else:
-                verbose(f"{additional_info[:FILE_NAME_MAX_LENGTH]:<30} {debug_name} {end-start} saniyede tamamlandı.")
+                verbose(f"{additional_info[:_FILE_NAME_MAX_LENGTH]:<30} {debug_name} {end-start} saniyede tamamlandı.")
 
 
             return return_val

@@ -22,7 +22,7 @@ ARGV: dict = None
 def init_globals():
     global BASE_PATH, FIRST_RUN, SESSION, ARGV
     ARGV = _get_argv_dict()
-    logger.DEBUG, logger.VERBOSE = _get_debug_verbose()
+    logger._DEBUG, logger._VERBOSE = _get_debug_verbose()
     BASE_PATH = _get_directory()
     FIRST_RUN = _get_first_run()
     SESSION = _get_session()
@@ -84,15 +84,15 @@ def _get_first_run():
     Checks whether this is the first time that program ran on selected directory by checking database file
     """
     if BASE_PATH:
-        first_run = not exists(join(BASE_PATH, "ninova_arsivci.db"))
+        first_run = (not exists(join(BASE_PATH, "ninova_arsivci.db"))) or ("force" in ARGV)
         return first_run
     else:
-        logger.fail("Klasör seçilmemiş. get_directory() fonksiyonu ile BASE_PATH değişkeni ayarlanmalı!")
+        logger.fail("Klasör seçilmemiş. get_directory() fonksiyonu ile BASE_PATH değişkeni ayarlanmalı! Geliştiriciye bildirin!")
 
 def _get_session():
     """
     Gets username and password from commandline if exists, else prompts user\n
-    Eğer kullanıcı adı veya şifre yanlış se
+    Eğer kullanıcı adı veya şifre yanlış ise
     """
     while True:
         if "u" in ARGV:
@@ -101,6 +101,7 @@ def _get_session():
             username = input("Kullanıcı adı (@itu.edu.tr olmadan): ")
             password = getpass("Şifre: ")
     
+        print("Giriş yapılıyor...\n")
         try:
             session = login( (username, password) )
             return session
