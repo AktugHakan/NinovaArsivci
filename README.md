@@ -1,9 +1,9 @@
-# Ninova Arşivci v3.5 BETA
+# Ninova Arşivci v3.5
 
 Ninova Arşivci, [Ninova](https://ninova.itu.edu.tr/)'daki dosyaları topluca indirmek için yazılmış bir Python programıdır.  
 (Ninova: İstanbul Teknik Üniversitesinin e-öğrenim merkezi)
 
-## v3.5 Deneysel Özellikler
+## v3.5 Özellikler
 * Artık hangi derslerin indirilebileceğini seçebilirsiniz. Kullanıcı adınız ve şifrenizi yazdıktan sonra hangi kursları indirmek istediğiniz sorulacaktır.
 * Daha açıklayıcı hata ve bilgilendirme mesajları eklendi
 
